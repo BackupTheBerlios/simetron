@@ -5,6 +5,8 @@ namespace Simetron.GUI.Core {
 	using Gdk;
 
 	public sealed class SplashWindow {
+		private static Gdk.Pixbuf pixbuf = new Pixbuf (null, 
+							       "pixmaps/splash.jpg");
 		private static Gtk.Dialog window;
 		private static Gtk.Button label;
 		private static bool readyToBeDestroyed = false;
@@ -24,8 +26,6 @@ namespace Simetron.GUI.Core {
 				window.SetPosition (WindowPosition.Center);
 				window.HasSeparator = true;
 
-				Gdk.Pixbuf pixbuf = new Pixbuf (null, 
-						     "pixmaps/splash.jpg");
 				Gtk.Image splashImage = new Gtk.Image (pixbuf);
 				window.VBox.PackStart (splashImage, false, false, 0);
 
