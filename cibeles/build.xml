@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<project name="cibeles" default="compile" basedir=".">
+    <property file="build.properties"/>
+    <property name="root.dir"             value="${basedir}"/>
+    <property name="src.dir"              value="${root.dir}/jsrc"/>
+    <property name="junit.dir"            value="${root.dir}/junit"/>
+    <property name="compile.dir"          value="${root.dir}/bin"/> 
+    <property name="lib.dir"              value="${root.dir}/lib"/>
+    <property name="tools.dir"            value="${root.dir}/tools"/>
+    <property name="dist.dir"             value="${root.dir}/dist"/>
+    <property name="doc.dir"              value="${root.dir}/doc"/>
+    <property name="javadoc.dir"          value="${dist.dir}/javadoc"/>
+    <property name="conf.dir"             value="${root.dir}/conf"/>
+
+    <property name="build.compiler.emacs" value="true"/>
+    <property name="javadoc.packages"     value="com.olympum.*"/>
+
+<!-- BOGUS!   <taskdef name="javamake" classname="com.sun.tools.javamake.ant.JavaMake"/> 
+    <property name="javamake.pdb.filename" value="${compile.dir}/project.pdb"/> -->
+
+    <path id="cibeles.classpath">
+        <pathelement location="${compile.dir}"/>
+        <fileset dir="${lib.dir}">
+		    <include name="*.jar"/>
+	</fileset>
+    </path>
+
+    <path id="junit.classpath">
+    	<path refid="cibeles.classpath"/>
+	<pathelement location="${compile.dir}"/>
+	<pathelement location="${junit.dir}"/>
+        <fileset dir="${tools.dir}">
+		<include name="tools/junit.jar"/>
+	</fileset>
+    </path>
+
+
+    <target name="prepare">
+        <property environment="env"/>
+        <mkdir dir="${compile.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+	<mkdir dir="${javadoc.dir}"/>
+    </target>
+
+
+    <target name="compile" 
+            depends="prepare"
+		    description="Compiles Java files">
+    	    <javac destdir="${compile.dir}" 
+		   classpathref="cibeles.classpath"
+		   debug="on"
+		   deprecation="on"
+		   optimize="off"
+		   listfiles="true"
+		   includes="*/**">
+<!--		   pdbFilename="${javamake.pdb.filename}">-->
+            <src path="${src.dir}"/>
+        </javac>
+    </target>
+
+    <target name="compile-junit" 
+            depends="compile"
+		    description="Compiles Junit Java files">
+    	    <javac destdir="${compile.dir}"
+		   classpathref="junit.classpath"
+		   debug="on"
+		   deprecation="on"
+		   optimize="off"
+		   listfiles="true"
+		   includes="*/**">
+<!--		   pdbFilename="${javamake.pdb.filename}">-->
+            <src path="${junit.dir}"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile"
+            description="Creates JAR files in the ./dist directory">
+
+        <jar destfile="${dist.dir}/cibeles.jar"
+            basedir="${compile.dir}"
+            includes="*/**"
+            excludes="*/*Test.java">
+            <fileset dir="${conf.dir}" includes="*.dtd, *.xml"/>
+        </jar>
+
+    </target>
+
+
+    <!-- generate java doc -->
+    <target name="javadoc"
+            depends="prepare"
+	    description="Create Javadoc documentation in the ./doc/javadoc directory">
+        <javadoc packagenames="${javadoc.packages}"
+            sourcepath="${src.dir}"
+            destdir="${javadoc.dir}"
+            classpathref="cibeles.classpath"
+            author="true"
+            version="true"
+	   		 use="true"
+            bottom="Copyright &#169; 2002 www.olympum.com . All Rights Reserved."
+    />
+    </target>
+
+
+    <!-- clean up directories -->
+    <target name="clean"
+            description="Removes all class files and the ./dist directory">
+        <delete dir="${compile.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete>
+            <fileset dir="${root.dir}" defaultexcludes="no">
+	        <include name="**/*~"/>
+	    </fileset>
+        </delete>
+    </target>
+
+
+    <target name="all"
+            depends="jar,javadoc"
+	    description="Compiles all files, creates JARs and Javadoc documentation"/>
+
+
+    <target name="version" 
+            depends="compile"
+	    description="Prints some info about the Ant version and the OS/JDK used">
+        <echo message="${ant.version}"/>
+        <echo message="JDK=${java.vm.version} on ${os.name} ${os.version}"/>
+     <!--   <java classname="org.javagroups.Version" classpathref="cibeles.classpath"/>-->
+    </target>
+
+
+   <target name="unittests"
+           depends="compile-junit"
+           description="Runs all unit tests in tests/junit and prints results to stdout">
+       <junit printsummary="yes" timeout="60000" fork="yes">
+           <classpath refid="junit.classpath"/>
+           <formatter type="brief" usefile="false"/>
+	   <batchtest todir="/tmp">
+	       <fileset dir="${junit.dir}"
+	                includes="**/*Test.java"/>
+	   </batchtest>
+       </junit>
+   </target>
+
+
+   <target name="upload"
+           description="FTP javagroups-all.jar to host defined in build.properties">
+       <ftp server="${ftp.servername}"
+            userid="${ftp.userid}"
+	    password="${ftp.password}"
+	    remotedir="${ftp.remotedir}"
+	    verbose="true">
+	    <fileset dir="${dist.dir}" includes="javagroups-all.jar"/>
+       </ftp>
+   </target>
+   
+
+   <target name="unittests-xml" depends="compile">
+       <junit printsummary="yes" timeout="60000" fork="yes">
+           <classpath refid="junit.classpath"/>
+           <classpath refid="cibeles.classpath"/>
+           <formatter type="xml" usefile="true"/>
+	   <batchtest todir="/tmp">
+	       <fileset dir="${junit.dir}"
+	                includes="**/*Test.java"/>
+	   </batchtest>
+       </junit>
+   </target>
+
+
+   <target name="testreport"
+           depends="unittests-xml"
+	   description="Generates HTML from unit tests">
+       <delete dir="/tmp/html"/>
+       <mkdir dir="/tmp/html"/>
+       <junitreport todir="/tmp/html">
+           <fileset dir="/tmp" includes="TEST*.xml" excludes="*TestSuites*"/>
+	   <report todir="/tmp/html"/>
+       </junitreport>
+       <echo message="*********************************************************"/>
+       <echo message="The unit test report is available in /tmp/html/index.html"/>
+       <echo message="*********************************************************"/>
+   </target>
+
+
+</project>

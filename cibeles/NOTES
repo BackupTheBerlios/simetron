@@ -1,0 +1,45 @@
+Cibeles -Description of a Work-Spaces Implementation
+====================================================
+
+A workflow repository is the ensemble of processes and activities that constitute certain workflow configuration.
+The respository does not necesseraly have to be centralized, and will in most of the cases be distributed.
+
+Distribution is achieved by using a work-space. A work-space is a collaborative system for the execution
+of workflows inspired by Linda. In the work-space, multiple workers collaborate to execute workflows. Clients
+requests workflows to be executed and workers collaborate to execute them.
+
+Each worker is responsible for the execution of a subset of nodes. A node is an abstraction of a simple node,
+or an activity, and an associative node, or a process.
+
+The set of definitions contained in all workers constitutes a partition of the workflow repository. There are
+several possible strategies for this partition, depending on how the workers collaborate. There are two extreme
+possible cases
+a) Replicated Worker -- all workers contain all definitions, the repository consist of a single partition.
+b) Specialized Worker -- each worker contains a part of the definitions, this is a subset of nodes.
+
+As an example, one could think of a schema were certain workers have ownership of the associative nodes, while some
+others are responsible for the simple nodes. The actual setup does not have an influence on the execution of the system.
+
+As a rule, a worker listens in the workflow-space for tasks that it knows how to execute. Once such a task is available 
+in the space, the worker removes the task from the space, continues the workflow locally until it reaches a point where
+the execution depends on tasks that it does not know how to execute. At that point, the worker puts an entry/task in the
+space asking for another worker to take over the job.
+
+Basically, the steps that follow during initialization of the workflow space are:
+. a definition coordinator loads the workflow definitions
+. a worker joins the workflow-space 
+. the coordinator puts an assignment the worker (all workflows)
+. another worker joins the workflow-space
+. (opt) the coordinator pus a new assignment to the workers (i.e splitting the load)
+
+The follow sequence of interactions describes the normal use case of a client requesting the execution of a workflow:
+. a client puts a workflow request together with its associated data
+. among the workers responsible for that workflow, the first one to be available takes the request
+. the worker starts the process. if it has the capabilities to complete the workflow, it will continue doing so,
+and put back a response once finished. otherwise, it will continue as far as it can, and the put workflow requests
+together with its associated data, into the workflow-space.
+. the client takes the response. the client can be either an external client, or a worker itself, requesting
+collaboration from other nodes.
+
+A tuple in this implementation is the pair (request name, data), where request name is the name of the path or node
+requested to be executed.

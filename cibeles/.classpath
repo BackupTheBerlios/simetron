@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="src" path="jsrc"/>
+    <classpathentry kind="src" path="junit"/>
+    <classpathentry kind="lib" path="tools/junit.jar"/>
+    <classpathentry kind="lib" path="lib/jdom.jar"/>
+    <classpathentry kind="lib" path="lib/xmlParserAPIs.jar"/>
+    <classpathentry kind="lib" path="lib/xercesImpl.jar"/>
+    <classpathentry kind="lib" path="tools/ant/lib/optional.jar"/>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+    <classpathentry kind="output" path="bin"/>
+</classpath>
