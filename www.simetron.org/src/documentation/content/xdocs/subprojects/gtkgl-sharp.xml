@@ -6,85 +6,65 @@
   </header> 
   <body> 
     	<section>
-		<title>Introduction (the Gtk side)</title>
-<p>GtkGL# is a library that allows to use OpenGL from Gtk# components.
-It is currently in very alpha state, so use it as your own risk.
-I am posting it so that people can play with it ...</p>
+		<title>Introduction</title>
+<p>GtkGL# is a library that allows using OpenGL from Gtk# components. It is currently in very alpha state, so use it as your own risk. I am posting it so that people can play with it ...</p>
  
-<p>I needed to be able to draw OpenGL from my Gtk# programs, sort of the
-same thing CsGL does for System.Windows.Forms.</p>
+<p>I needed to draw 2D network graphs efficiently for the <link href="../simetron/index.html">Simetron workbench</link>, so I decided to use OpenGL. However, I found no support in Gtk# for OpenGL. I was looking for something like CsGL, which allows you to use OpenGL in System.Windows.Forms, but for Gtk#.</p>
  
-<p>I knew this was possible with Gtk+ in C, but not in C#. I
-started with GtkGLExt, which allows to draw OpenGL from any Gtk widget,
-and created C# bindings using Gtk# GAPI generator (excellent stuff!).
-Unfortunately in order for GtkGLExt to allow drawing on any widget, it
-intrudes the GtkWidget, GdkWindow and GdkPixmap APIs. In C this is fine,
-but in C# it is not. This and some other complications with the interface
-made me look for something else.</p>
+<p>I knew this was already available in Gtk+ using C, but not for Gtk#. I started creating C# bindings for GtkGLExt, a library that allows drawing OpenGL from any Gtk widget. Unfortunately in order for GtkGLExt to allow drawing on any widget, it intrudes the APIs of GtkWidget, GdkWindow and GdkPixmap. In C this is fine, but in C# it is definitely not. This and some other complications with the interface made me look for something else.</p>
  
 <note>You can get gtkglext directly from <link href="http://gtkglext.sourceforge.net">sourceforge</link>, but it is normally available already in most Linux distributions.</note>
  
-<p>GtkGLArea is a non-maintained C library that provides its own widget,
-called GtkGLArea for drawing OpenGL on Gtk+. The widget works, but
-unfortunately the latest version released, 1.99, has some bugs.
-Creating C# bindings for GtkGLArea was straight forward after minor
-changes to the API.</p>
+<p>I found a non-maintained widget, GtkGLArea, for drawing OpenGL on Gtk+. The widget works, but
+unfortunately the latest version released, 1.99, has some bugs. Creating C# bindings for GtkGLArea was straight forward and only a few cosmetic changes were required to the API.</p>
  
-<note>You can get get gtkglarea directly from the gnome CVS, or as a tarball also from Gnome's ftp. It normally available for most most Linux distributions, although if you RPM packaging be prepared for a dependency nightmare.</note>
+<note>You can get gtkglarea directly from the gnome CVS, or as a tarball from Gnome's ftp. However, it is normally available as a package for most Linux distributions.</note>
 	</section>
 	<section>
-	<title>Introduction (the OpenGL side)</title>
+	<title>OpenGL</title>
  
 <p>It seems like OpenGL is one of the favorite native libraries for us
-developers to bind :) On a quick search on Google I found:</p>
+developers to bind :) On a quick search on Google I found at least 5 C# bindings:</p>
  
 <ul>
-<li>glgen, a module on mono's CVS - this is a very interesting library,
-as it is automatically generated using's Gtk# GAPI. However, I could
-not get the gears example to work on Mono 0.26.</li>
+<li><fork href="http://sourceforge.net/projects/monoglo">MonoGLo</fork>, a binding of GL, GLU and GLUT. In order for a class to be able to use MonoGLO, it needs to extend the MonoGLo class.</li>
+
+<li>glgen, available on Ximian's go-mono CVS as the <code>glgen</code> module. This is a very interesting library, as it extends the GAPI approach followed by the Gtk# team to generate the bindings automatically from the C .h header files.</li>
  
-<li>MonoGLo, another C# binding, more .NET style. Available in SF.NET.</li>
+<li><fork href="http://csgl.sourceforge.net">CsGL</fork>, possibly the most well-known OpenGL bindings for .NET. It does not support Mono on Linux yet.</li>
  
-<li>CsGL, possibly the most used OpenGL bindings for .NET. However, it
-does not support Mono and Linux yet (no glx), so I could not consider
-it.</li>
- 
-<li>Tao, http://www.randyridge.com/tao/, which seems to be the most
-complete. However, it is open-binary, not open-source. Sorry.</li>
- 
-<li>OpenGL-C#, http://www.colinfahey.com/opengl/csharp.htm, released
-to the public domain by Colin Fahey. It is essentially a C# direct
-mapping of the C library. I liked this, because it allows to quickly
-port existing C OpenGL programs to C#. This is the library I am using.</li>
+<li><fork href="http://www.randyridge.com/tao/">Tao</fork>, which are probably the most complete bindings available. It seems like only binaries are available for download as of Sept 13, 2003, although it is released under a BSD license. I checked version 0.8.1, and hopefully the source will be available soon.</li>
+
+<li><fork href="http://www.colinfahey.com/opengl/csharp.htm">OpenGL-C#</fork>, released to the public domain by Colin Fahey. It is essentially a straight forward C# mapping of the C library. I liked this, because I can quickly port existing C OpenGL programs to C#. This is the library I am using for the samples.</li>
 </ul>
+
+<p>Anyhow, GtkGL# does not care which OpenGL library you choose, and this is mainly your choice. I chose Colin's bindings because they were straight forward and worked fine for me linux, but this may change in the future.</p>
 	</section>
-	<section>
-		<title>Installation Requirements</title>
-<ol>
-<li>Download, make and install gtkglarea.</li>
-<li>Tell mono where to find the gtkglarea shared library by modifying mono's config. Make sure that
-the library is accessible to the mono runtime (LD_LIBRARY_PATH).</li>
-<li>Double check that you have the GL and GLU libraries installed as
-libGL.so and libGLU.so</li>
-</ol>
-	</section> 
 	<section>
 		<title>Download</title>
 			<p>You can download the latest binary release of GtkGL# from <link href="http://developer.berlios.de/project/showfiles.php?group_id=1018">berliOS</link>. Alternatively, you can download the sources directly from <link href="../cvs.html">CVS</link>.</p>
 	</section>
 	<section>
-		<title>Building</title>
-<p>The tarball comes with pre-built binaries. You can also use the provided
-makefiles, but bear with me because I have not ensured that it will
-work on all platforms.</p>
+		<title>Requirements</title>
+<ol>
+<li>Download, make and install gtkglarea.</li>
+<li>Tell mono where to find the gtkglarea shared library by modifying mono's config. Make sure that
+the library is accessible to the mono runtime (LD_LIBRARY_PATH).</li>
+<li>Double check that you have the GL and GLU libraries installed as libGL.so and libGLU.so</li>
+</ol>
 	</section> 
 	<section>
+		<title>Building</title>
+<p>The tarball comes with pre-built binaries. You can also use the provided makefiles, but bear with me because I have not ensured that they will work on all platforms.</p>
+	</section> 
+	<section>
+		<title>Screenshots</title>
+		<p>Getting the traditional GL gears example to work was straight forward. You can find the sources under the <code>sample</code> directory in the release tarball.</p>
+		<figure src="images/screenshots/gears-20030914.png" alt="GtkGL# Gears Screenshot"/>	      
+	</section>
+	<section>
 		<title>Future Plans</title>
-	<p>I am thinking currently about creating a Gtk# component, only in C#, that
-would not require the gtkglarea C library, but only pure .NET assemblies:
-Gtk# and OpenGl#. Doing this is not straight forward, because I need to
-expose some interesting Gtk+ methods to get the X-Window id or Win32
-handle, but this will surely be a lot of fun.</p>
+	<p>I am thinking currently about creating a managed Gtk# component that would not require a native library like the gtkglarea, and creating a canvas layer on top of GtkGL# that would hide the complexity of OpenGL.</p>
 	</section>
 	<section>
 		<title>Bugs and Patches</title> 

@@ -25,7 +25,7 @@ See http://xml.apache.org/forrest/linking.html for more info
 	<contact label="Contact us" href="contact.html" description="Contact info"/>	
 </about>
 
-<simetron label="Simetron" href="simetron/" tab="simetron">
+<simetron label="Simetron" href="simetron/">
 	<index label="Motivation" href="index.html" description="Motivation of Traffic Simulation"/>
 	<overview label="Overview" href="overview.html" description="Project Overview"/>	
 	<features label="Features" href="features.html" description="Main Features"/>
@@ -33,7 +33,7 @@ See http://xml.apache.org/forrest/linking.html for more info
 	<downloads label="Downloads" href="downloads.html" description="Downloads"/>
 </simetron>			
 
-<subprojects label="Subprojects" href="subprojects/" tab="subprojects">
+<subprojects label="Subprojects" href="subprojects/">
 	<overview label="Overview" href="index.html" description="Subprojects Overview"/>	
 	<gtkgl-sharp label="GtkGL#" href="gtkgl-sharp.html" description="GtkGL#"/>
 </subprojects>			

@@ -6,7 +6,7 @@
   </header> 
   <body> 
     	<section>
-		<title>GtkGL#</title>
+		<title>Gtk# and OpenGL</title>
 			<p>In order to allow using the OpenGL graphics library in our Simetron Workbench, we have developed the <link href="gtkgl-sharp.html">GtkGL# library</link>, a managed assembly for .NET that allows Gtk# widgets to draw on an OpenGL context.</p>
     	</section>
   </body>

@@ -6,7 +6,7 @@
   </header> 
   <body> 
     <section>
-      <title>Limitations of Current Simulation Software</title>
+      <title>Simulation Software</title>
 <p>Typically, traffic simulation models can be classified into two types based on the granularity of the modeling of the traffic phenomena: macroscopic and microscopic. The former represent the traffic with macroscopic flow/density/speed functions, while the later represent the individual vehicle behavior, including car-following, lane-changing, yielding and merging, etc. based on socio-demographic characteristics of the driver. A discretization of time is normally used, and at each time step, behavioral choices are calculated and vehicles' positions updated as necessary.</p>
 
 <p>Macroscopic simulation can provide adequate results for applications that do not require a high degree of accuracy in the results, such as regional planning. However, practitioners normally require more precise information about queues, flows, speeds and densities than those that can be provided by a macroscopic simulation model. Microscopic simulation models are theoretically able to provide such required level of accuracy, but nevertheless face several significant obstacles.</p>
@@ -20,7 +20,7 @@
 <p>As a result, microscopic traffic simulation software does not solve the requirements of neither transportation planners nor traffic management centers.</p>
 	</section>
 	<section>
-		<title>Mesoscopic Traffic Simulation</title>	
+		<title>Mesoscopic Simulation</title>	
 <p>Mesoscopic traffic simulation is valid a intermediate solution between microscopic and macroscopic models. Mesoscopic simulations can model the network and the vehicle movements at the same level of detail as microscopic simulations. However, because the driver behavior is highly simplified and the vehicle dynamics are determined by macroscopic calculations (i.e. capacity constraints), it is possible to model larger areas and move more cars than it would be possible with a microscopic simulation.</p>
 
 <p>With mesoscopic traffic simulation, we are able to provide results at a level of significance close to those available with microscopic simulation, while gaining in simulation speeds, reducing resource constraints, and simplifying the modeling work.</p>
