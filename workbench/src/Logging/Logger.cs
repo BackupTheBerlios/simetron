@@ -15,19 +15,38 @@ namespace Simetron.Logging {
 		static Logger () {
 			Init ();
 		}
-		
+
+		private static FileStream stream;
+		private static StreamWriter writer;
+
 		private static void Init () {
 			System.Diagnostics.Debug.Listeners.Add (new StackFrameTraceListener ());
+			stream = new FileStream ("simetron.log",
+						 FileMode.OpenOrCreate,
+						 FileAccess.Write);
+			writer = new StreamWriter (stream);
+			writer.BaseStream.Seek (0, SeekOrigin.End);
 			Logger.Debug ("Initialized console logging");
 		}
 
 		[Conditional("DEBUG")]
 		public static void Debug (string message) {
+			WriteToFile ("DEBUG", message);
 			System.Diagnostics.Debug.WriteLine (message);
 		}
 
 		public static void Fail (string message) {
+			WriteToFile ("FAIL", message);
 			System.Diagnostics.Trace.Fail (message);
+		}
+
+		private static void WriteToFile (string priority, string message) {
+			writer.WriteLine ("{0} {1} [{2}] {3}",
+					  DateTime.Now.ToShortDateString (),
+					  DateTime.Now.ToShortTimeString (),
+					  priority,
+					  message);
+			writer.Flush ();
 		}
 
 		// note that assertions only work on DEBUG mode! this is in purpose
