@@ -13,30 +13,27 @@ namespace Simetron.GUI.Core {
 
 		[STAThread()]
 		public static void Main (string[] args) {			
-			Application.Init ();			
-			Initialize ();
-			MainLoop ();
+			try {
+				Application.Init ();			
+				Initialize ();
+				MainLoop ();
+			} catch (Exception e) {
+				Logger.Fail ("Fatal exception : " + e);
+				
+			}
 		}
 
 		private static void Initialize () {
 			SplashWindow.Update ("Starting Simetron");
-			// does the installation directory exist?
-// 			if (!Directory.Exists (GSimetronMain.InstallationDirectory)) {
-// 				SplashWindow.Update("Completing installation ...");
-// 				// create workspace directory
-// 				DirectoryInfo dir = new DirectoryInfo (GSimetronMain.InstallationDirectory);
-// 				dir.Create ();
-// 				Logger.Debug ("Created directory " + 
-// 					      GSimetronMain.InstallationDirectory);
-// 			}
 			if (!File.Exists (GSimetronMain.MetadataFile)) {
 				// create and save empty workspace
-				Workspace ws = new Workspace ();
+				/*Workspace ws = new Workspace ();
 				IStore store = StoreFactory.Instance.CreateStore (typeof (Workspace),
 										  StoreMode.XML);
 				store.OpenConnection (GSimetronMain.MetadataFile);
 				store.Write (ws);
 				store.CloseConnection ();
+				*/
 			}
 
 			SplashWindow.Update ("Launching workbench");
@@ -68,7 +65,9 @@ namespace Simetron.GUI.Core {
 
  		public readonly static string MetadataFile = Environment.GetEnvironmentVariable("HOME") + 
   			Path.DirectorySeparatorChar + 
-  			"workspace-simetron" + 
+  			"simetron" +
+  			Path.DirectorySeparatorChar + 
+  			"workspace" + 
  			Path.DirectorySeparatorChar + 
  			".metadata.xml";
 	}

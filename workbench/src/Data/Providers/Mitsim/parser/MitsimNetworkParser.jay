@@ -1,0 +1,717 @@
+%{  // -*-csharp-*-
+namespace Simetron.Data.Providers.Mitsim 
+{
+	using System;
+	using System.Collections;
+	using System.IO;
+	using System.Text;
+	using Simetron.Data.NetworkTopology;
+	using Simetron.Data.Geometry;
+	
+	public class MitsimNetworkParser {
+		MitsimLexer lexer;
+		Hashtable labels; //intermediate structure to store labels
+		Hashtable lanes; // intermediate structure to store lanes
+		Network network;
+		Link link; // the current link being parsed
+		Segment segment; // the current segment being parsed
+		Stack stack; // stack to store interm. objects		
+		
+		public MitsimNetworkParser ()
+		{
+			labels = new Hashtable ();
+			lanes = new Hashtable ();
+			stack = new Stack ();
+		}
+%}
+
+%token ERROR
+%token EOF
+%token NONE
+	
+%token TITLE "Title"
+%token LABELS "Link Labels"
+%token NODES "Nodes"
+%token LINKS "Links"
+%token CONNECTORS "Lane Connections"
+%token PROHIBITORS "Turn Prohibitors"
+%token SENSORS "Sensors"
+%token SIGNALS "Signals"
+%token TOLLS "Toll Plazas"
+%token STOPS "Bus Stops"
+%token SDFNS "Speed-Density Functions"
+%token INTERSECTS "Intersections"
+%token ISNODE "at Node"
+
+%token LSB "["
+%token RSB "]"
+%token COL ":"
+%token LCB "{"
+%token RCB "}"
+%token HYP "~"
+%token LITTERAL
+%token INTEGER
+%token REAL
+
+%start everything
+		
+%%
+	
+everything: heading body opt_EOF
+{
+	Console.WriteLine("Network parsing done");
+}
+;
+
+opt_EOF: /* empty */
+| EOF
+;
+
+heading: description labels
+| description
+;
+
+description: LSB TITLE RSB COL LITTERAL
+{
+	network = new Network ((string) $5);
+}
+;
+
+labels: LSB LABELS RSB label_allocator LCB RCB
+| LSB LABELS RSB label_allocator LCB multi_labels RCB
+{
+	Console.WriteLine("Section labels done");
+}
+;
+
+label_allocator: num_objects
+{
+	// disregard the allocation
+}
+;
+
+multi_labels: label
+| multi_labels label
+;
+
+label: LCB INTEGER LITTERAL RCB
+{
+	int key = (int) $2;
+	string value = (string) $3;
+	labels[key] = value;
+}
+;
+
+body: network sensors controls sdfns intersections
+| network sensors controls sdfns
+| network sensors controls intersections
+| network sensors sdfns intersections
+| network controls sdfns intersections
+| network sensors controls
+| network sensors sdfns
+| network sensors intersections
+| network controls sdfns
+| network controls intersections
+| network sdfns intersections
+| network sensors
+| network controls
+| network sdfns
+| network intersections
+| network
+;
+
+network: basic_network prohibitors
+| basic_network
+;
+
+basic_network: nodes links connectors
+{
+	Console.WriteLine("Done reading basic network");
+}
+;
+
+controls: signals toll_plazas bus_stops 
+| signals
+| toll_plazas
+| bus_stops
+| signals toll_plazas
+| toll_plazas bus_stops
+| signals bus_stops
+;
+
+nodes: LSB NODES RSB node_allocator LCB multi_nodes RCB
+{
+	Console.WriteLine("Read all nodes");
+}
+;
+
+node_allocator: num_objects
+{
+	// ignore 
+}
+;
+
+multi_nodes: node
+| multi_nodes node
+;
+
+node: LCB INTEGER INTEGER LITTERAL RCB
+{
+	int id = (int) $2;
+	NodeType type = (NodeType) $3;
+	string name = (string) $4;
+	Node n = new Node (id, type, name);
+	network.AddNode (n);
+}
+;
+
+links: LSB LINKS RSB link_allocator LCB multi_links RCB
+{
+	Console.WriteLine("Read all links");
+	link = null;
+	segment = null;
+}
+;
+
+link_allocator:  num_objects num_objects num_objects
+{
+	// ignore
+}
+;
+
+multi_links: link
+| multi_links link
+;
+
+link: LCB link_data multi_segments RCB
+;
+
+link_data: INTEGER INTEGER INTEGER INTEGER INTEGER
+{
+	int id = (int) $1;
+	LinkType type = (LinkType) $2;
+	int upNID = (int) $3;
+	Node upNode = network.GetNode (upNID);
+	if (upNode == null) {
+		throw new FormatException ("Link " + id + 
+						  " has an invalid node " + upNID);
+	}
+	int dnNID = (int) $4;
+	Node downNode = network.GetNode (dnNID);
+	if (downNode == null) {
+		throw new FormatException ("Link " + id + 
+						  " has an invalid node " + dnNID);
+	}
+	int labelID = (int) $5;
+	string name = (string) labels[labelID];
+	if (name == null) {
+		name = "Unnamed";
+	}
+	link = new Link (id, type, upNode, downNode, name);
+	network.AddLink (link);
+	segment = null;
+}
+;
+
+multi_segments: segment
+| multi_segments segment
+;
+
+segment: LCB segment_data geometry multi_lanes RCB
+;
+
+segment_data: segment_data5 | segment_data4 | segment_data3
+;
+
+segment_data5: INTEGER INTEGER FLOAT FLOAT INTEGER
+{
+	stack.Push ($1);
+	stack.Push ($2);
+	stack.Push ($3);
+	stack.Push ($4);
+	stack.Push ($5);
+}
+;
+
+segment_data4: INTEGER INTEGER FLOAT FLOAT
+{
+	stack.Push ($1);
+	stack.Push ($2);
+	stack.Push ($3);
+	stack.Push ($4);
+	stack.Push (null);
+}
+;
+
+segment_data3: INTEGER INTEGER FLOAT
+{
+	stack.Push ($1);
+	stack.Push ($2);
+	stack.Push ($3);
+	stack.Push (null);
+	stack.Push (null);
+}
+;
+ 
+
+geometry: LCB arc RCB
+;
+
+arc: FLOAT FLOAT FLOAT FLOAT FLOAT
+{
+	// segments are listed from up node to down node
+
+	// ($1,$2)=StartPoint $3=Bulge ($4,$5)=EndPoint
+	float x1 = (float) $1;
+	float y1 = (float) $2;
+	float bulge = (float) $3;
+	float x2 = (float) $4;
+	float y2 = (float) $5;
+
+	object o5 = stack.Pop ();
+	object o4 = stack.Pop ();
+	object o3 = stack.Pop ();
+	object o2 = stack.Pop ();
+	object o1 = stack.Pop ();
+	
+	int id = (int) o1;
+	int defaultSpeedLimit = (int) o2;
+	float freeSpeed = (float) o3;
+	float grade = (o4 != null) ? (float) o4 : -1;
+	int indexPerfFunc = (o5 != null) ? (int) o5 : -1;
+
+	Point upPoint = new Point (x1, y1);
+	Point downPoint = new Point (x2, y2);
+	Point ctlPoint = new Point (0,0); // FIXME
+
+	Segment previous = segment;
+
+	segment = new Segment (id, upPoint, downPoint, ctlPoint, link);
+	segment.DefaultSpeedLimit = defaultSpeedLimit;
+	segment.FreeSpeed = freeSpeed;
+	segment.Grade = grade;
+
+	if (previous != null) {
+		previous.DownSegment = segment;
+		segment.UpSegment = previous;
+	}
+
+	// TODO: performance function
+}
+;
+
+multi_lanes: lane
+| multi_lanes lane
+;
+
+lane: LCB INTEGER INTEGER RCB
+{
+	int id = (int) $2;
+	int rules = (int) $3;
+
+	// mitsim rules are:
+	// 0 - cannot change
+	// 1 - can change right
+	// 2 - can change left
+	// 3 - can change right and left
+
+	LaneRule rule = LaneRule.CANNOT_CHANGE;
+
+	switch (rules) {
+	case 1:
+		rule |= LaneRule.CHANGE_RIGHT;
+		break;
+	case 2:
+		rule |= LaneRule.CHANGE_LEFT;
+		break;
+	case 3:
+		rule |= LaneRule.CHANGE_LEFT | LaneRule.CHANGE_RIGHT;
+		break;
+	}
+
+	Lane lane = new Lane (id, rule, segment);
+	if (lanes.Contains (id)) {
+		throw new FormatException ("Lane " + id + " not unique.");
+	}
+	lanes[id] = lane;
+}
+;
+
+connectors: LSB CONNECTORS RSB num_objects LCB RCB
+| LSB CONNECTORS RSB num_objects LCB multi_connectors RCB
+{
+	//Console.WriteLine("Section connectors done");
+}
+;
+
+multi_connectors: connector
+| multi_connectors connector
+;
+
+connector: LCB INTEGER INTEGER RCB
+{
+	int upLaneID = (int) $2;
+	int downLaneID = (int) $3;
+	Lane upLane = (Lane) lanes[upLaneID];
+	Lane downLane = (Lane) lanes[downLaneID];
+
+	if (upLane == null) {
+		throw new FormatException ("Error while connecting lanes: lane " + 
+					   upLaneID + " does not exist.");
+	}
+
+	if (downLane == null) {
+		throw new FormatException ("Error while connecting lanes: lane " + 
+					   downLaneID + " does not exist.");
+	}
+
+	upLane.AddDownLane (downLane);
+ 	downLane.AddUpLane (upLane);
+}
+
+prohibitors: LSB PROHIBITORS RSB num_objects LCB RCB
+| LSB PROHIBITORS RSB num_objects LCB multi_prohibitors RCB
+{
+	//Console.WriteLine("Section prohibitors done");
+}
+;
+
+multi_prohibitors: prohibitor
+| multi_prohibitors prohibitor
+;
+
+prohibitor: LCB INTEGER INTEGER RCB
+{
+	int fromLinkID = (int) $2;
+	int toLinkID = (int) $3;
+}
+;
+
+sensors: LSB SENSORS RSB sensor_allocator LCB RCB
+| LSB SENSORS RSB sensor_allocator LCB multi_sensor_stations RCB
+{
+	//Console.WriteLine("Section sensors done");
+}
+;
+
+sensor_allocator: num_objects
+{
+	// ignore
+}
+;
+
+multi_sensor_stations: sensor_station
+| multi_sensor_stations sensor_station
+;
+
+sensor_station: LCB sensor_station_data sensor_data RCB
+;
+
+sensor_station_data: INTEGER INTEGER FLOAT INTEGER FLOAT
+{
+	//Console.WriteLine("Section sensor station data done");
+}
+;
+
+sensor_data: link_sensor
+| link_sensor_typed
+| multi_lane_sensors
+;
+
+link_sensor: LCB INTEGER FLOAT RCB
+{
+	//Console.WriteLine("Section link sensor done");
+}
+;
+
+link_sensor_typed: LCB INTEGER FLOAT COL INTEGER RCB
+{
+	//Console.WriteLine("Section link sensor typed done");
+}
+;
+
+multi_lane_sensors: lane_sensor
+| lane_sensor_typed
+| multi_lane_sensors lane_sensor
+| multi_lane_sensors lane_sensor_typed
+;
+
+lane_sensor: LCB INTEGER FLOAT INTEGER RCB
+{
+	//Console.WriteLine("Section lane sensor done");
+}
+;
+
+lane_sensor_typed: LCB INTEGER FLOAT INTEGER COL INTEGER RCB
+{
+	//Console.WriteLine("Section sensor typed done");
+}
+;
+
+signals: LSB SIGNALS RSB signal_allocator LCB RCB
+| LSB SIGNALS RSB signal_allocator LCB multi_signal_stations RCB
+{
+	//Console.WriteLine("Section done");
+}
+;
+
+signal_allocator: num_objects
+{
+	//Console.WriteLine("Section signale allocator done");
+}
+;
+
+multi_signal_stations: signal_station
+| multi_signal_stations signal_station
+;
+
+signal_station: LCB signal_station_data signal_data RCB
+;
+
+signal_station_data: INTEGER FLOAT INTEGER FLOAT
+{
+	//Console.WriteLine("Section signal station data  done");
+}
+;
+
+signal_data: link_signal
+| multi_lane_signals
+;
+
+link_signal: LCB INTEGER INTEGER RCB
+{
+	//Console.WriteLine("Section link signnal done");
+}
+;
+
+multi_lane_signals: lane_signal
+| multi_lane_signals lane_signal
+;
+
+lane_signal: LCB INTEGER INTEGER INTEGER RCB
+{
+	//Console.WriteLine("Section lane signal done");
+}
+;
+
+toll_plazas: LSB TOLLS RSB num_objects LCB RCB
+| LSB TOLLS RSB num_objects LCB multi_toll_plazas RCB
+{
+	//Console.WriteLine("Section toll plazas done");
+}
+;
+
+multi_toll_plazas: toll_plaza
+| multi_toll_plazas toll_plaza
+;
+
+toll_plaza: LCB toll_plaza_data multi_toll_booths RCB
+;
+
+toll_plaza_data: FLOAT INTEGER FLOAT
+{
+	//Console.WriteLine("Section toll plaza data done");
+}
+;
+
+multi_toll_booths: toll_booth
+| multi_toll_booths toll_booth
+;
+
+toll_booth: LCB INTEGER INTEGER INTEGER INTEGER INTEGER FLOAT RCB
+{
+	//Console.WriteLine("Section toll booth done");
+}
+;
+
+bus_stops: LSB STOPS RSB num_objects LCB RCB
+| LSB STOPS RSB num_objects LCB multi_bus_stops RCB
+{
+	//Console.WriteLine("Section bus stops done");
+}
+;
+
+multi_bus_stops: bus_stop 
+| multi_bus_stops bus_stop
+;
+
+bus_stop: LCB bus_stop_data multi_bus_stop_chars RCB 
+;
+
+bus_stop_data: FLOAT INTEGER FLOAT
+{
+	//Console.WriteLine("Section bus stop data done");
+}
+;
+
+multi_bus_stop_chars: bus_stop_chars
+| multi_bus_stop_chars bus_stop_chars
+;
+
+bus_stop_chars: LCB INTEGER INTEGER INTEGER INTEGER INTEGER FLOAT INTEGER RCB
+{
+	//Console.WriteLine("Section bus stop chars done");
+}
+;
+
+sdfns: LSB SDFNS RSB sdfn_allocator LCB RCB
+| LSB SDFNS RSB sdfn_allocator LCB multi_sdfns RCB
+{
+	//Console.WriteLine("Section sdfns done");
+}
+;
+
+sdfn_allocator: num_objects
+{
+	//Console.WriteLine("Section sdfn allocator done");
+}
+;
+
+multi_sdfns: sdfn
+| multi_sdfns sdfn
+;
+
+sdfn: linear_sdfn
+| non_linear_sdfn
+;
+
+
+non_linear_sdfn: LCB FLOAT FLOAT FLOAT FLOAT FLOAT RCB
+{
+	//Console.WriteLine("Section done");
+}
+;
+
+
+linear_sdfn: LCB FLOAT FLOAT FLOAT FLOAT FLOAT FLOAT FLOAT RCB
+{
+	//Console.WriteLine("Section done");
+}
+;
+
+intersections: LSB INTERSECTS RSB IS_allocator multi_intersects
+;
+
+multi_intersects: intersect
+| multi_intersects intersect
+;
+
+intersect: ISNODE id LCB multi_manuvers RCB
+;
+
+id: COL INTEGER 
+{
+	//Console.WriteLine("Section done");
+}
+;
+
+
+IS_allocator: num_objects
+{
+	//Console.WriteLine("Section done");
+}
+;
+
+
+multi_manuvers: manuver
+| multi_manuvers manuver
+;
+
+manuver: LCB mymove LCB multi_conflict RCB LCB multi_fifo RCB characs RCB
+| LCB mymove LCB RCB LCB multi_fifo RCB characs RCB
+| LCB mymove LCB multi_conflict RCB LCB RCB characs RCB
+| LCB mymove LCB RCB LCB RCB characs RCB
+;
+ 
+
+mymove: INTEGER HYP INTEGER
+{ 
+	//Console.WriteLine("Section done");
+}
+;
+
+multi_conflict: conflict
+|multi_conflict conflict
+;
+
+conflict: INTEGER HYP INTEGER
+{
+	//Console.WriteLine("Section done");
+}
+;
+
+
+multi_fifo: fifo
+|multi_fifo fifo
+;
+
+fifo: INTEGER HYP INTEGER
+{
+	//Console.WriteLine("Section done");
+}
+;
+
+
+characs: FLOAT FLOAT
+{
+	//Console.WriteLine("Section done");
+}
+;
+
+num_objects: specified
+| unspecified
+{
+	$$ = $1;
+}
+
+ 
+specified: COL INTEGER
+{
+	$$ = $2;
+}
+
+
+unspecified: COL
+{
+	$$ = 0;
+}
+	
+
+FLOAT: REAL { $$ = $1;}
+| INTEGER { $$ = (float) (int) $1;}
+
+
+%%
+		
+public void parse (Stream s)
+{
+	lexer = new MitsimLexer(s);
+
+	// identifier tokens for network files
+	lexer.Identifiers["Title"] = Token.TITLE;
+	lexer.Identifiers["Link Labels"] = Token.LABELS;
+	lexer.Identifiers["Nodes"] = Token.NODES;
+	lexer.Identifiers["Links"] = Token.LINKS; 
+	lexer.Identifiers["Lane Connections"] = Token.CONNECTORS; 
+	lexer.Identifiers["Lane Connectors"] = Token.CONNECTORS; 
+	lexer.Identifiers["Turn Prohibitors"] = Token.PROHIBITORS; 
+	lexer.Identifiers["Sensors"] = Token.SENSORS; 
+	lexer.Identifiers["Signals"] = Token.SIGNALS; 
+	lexer.Identifiers["Control Devices"] = Token.SIGNALS; 
+	lexer.Identifiers["Toll Plazas"] = Token.TOLLS; 
+	lexer.Identifiers["Bus Stops"] = Token.STOPS; 
+	lexer.Identifiers["Speed-Density Functions"] = Token.SDFNS; 
+	lexer.Identifiers["Performance Functions"] = Token.SDFNS; 
+	lexer.Identifiers["Intersections"] = Token.INTERSECTS; 
+	lexer.Identifiers["at Node"] = Token.ISNODE; 
+
+	yyparse (lexer);
+
+	labels.Clear ();
+	labels = null;
+	lanes.Clear ();
+	lanes = null;
+	stack.Clear ();
+	stack = null;
+}
+}

@@ -9,13 +9,13 @@ namespace Simetron.GUI.Commands {
 		}
 
 		public bool Run () {
-			Workspace ws = WorkbenchSingleton.Instance.Workspace;
+			/*Workspace ws = WorkbenchSingleton.Instance.Workspace;
 			IStore store = StoreFactory.Instance.CreateStore (typeof (Workspace),
 									  StoreMode.XML);
 			store.OpenConnection (GSimetronMain.MetadataFile);
 			store.Write (ws);
 			store.CloseConnection ();
-
+			*/
 			WorkbenchView view = WorkbenchSingleton.Instance.ActiveWorkbenchView;
 			WorkbenchSingleton.Instance.RemoveWorkbenchView (view);
 			view.Window.Destroy ();

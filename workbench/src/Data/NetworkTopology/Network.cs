@@ -1,134 +1,67 @@
-using System;
-using System.Collections;
-using System.IO;
-using System.Text;
-using System.Xml.Serialization;
-using Simetron.Logging;
+//
+// Network.cs  - A representation of a topological network
+//
+// Author:
+//   Bruno Fernandez-Ruiz (brunofr@olympum.com)
+//
+// Copyright (c) 2003 The Olympum Group,  http://www.olympum.com
+// All Rights Reserved
+//
 
-namespace Simetron.Data.NetworkTopology {
-	public class Network : IdentifiedElement {
-		private ArrayList children;
+namespace Simetron.Data.NetworkTopology
+{
+	using System;
+	using System.Collections;
+	using Simetron.Data;
 
-		public Network () : base () {
-			children = new ArrayList();
+	public class Network : INamed
+	{
+		Hashtable nodes;
+		Hashtable links;
+		string name;
+
+		public Network (string name)
+		{
+			this.name = name;
+			nodes = new Hashtable ();
+			links = new Hashtable ();
 		}
 
-		[XmlIgnoreAttribute]
-		public override IdentifiedElement[] Children {
-			get {
-				return (IdentifiedElement[]) 
-					children.ToArray (typeof (IdentifiedElement));
-			}
+		public string Name {
+			get { return name; }
+			set { name = value; }
 		}
 
-		public Node[] Nodes {
-			get {
-				ArrayList nodes = new ArrayList ();
-				foreach (IdentifiedElement e in children) {
-					Node n = e as Node;
-					if (n != null) {
-						nodes.Add (n);
-					}
-				}
-				return (Node[]) nodes.ToArray (typeof (Node));
-			}
-			set {
-				RemoveAllNodes ();
-				foreach (Node n in value) {
-					Add (n);
-				}
-			}
+		public ICollection Nodes {
+			get { return nodes.Values; }
 		}
 
-		public Link[] Links {
-			get {
-				ArrayList links = new ArrayList ();
-				foreach (IdentifiedElement e in children) {
-					Link l = e as Link;
-					if (l != null) {
-						links.Add (l);
-					}
-				}
-				return (Link[]) links.ToArray (typeof (Link));
-			}
-			set {
-				RemoveAllLinks ();
-				foreach (Link l in value) {
-					Add (l);
-				}
-			}
+		public ICollection Links {
+			get { return links.Values; }
 		}
-
-		private void RemoveAllNodes () {
-			foreach (IdentifiedElement e in children) {
-				Node n = e as Node;
-				if (n != null) {
-					children.Remove (n);
-				}
-			}
-		}
-
-		private void RemoveAllLinks () {
-			foreach (IdentifiedElement e in children) {
-				Link l = e as Link;
-				if (l != null) {
-					children.Remove (l);
-				}
-			}
-		}
-
-		public void Connect () {
-			foreach (IdentifiedElement e in children) {
-				Link l = e as Link;
-				if (l != null) {	
-					Node origin = (Node) GetChild (l.OriginID);
-					Logger.Assert (origin != null, "origin != null");
-					l.Origin = origin;
-					Node destination = (Node) GetChild (l.DestinationID);
-					Logger.Assert (destination != null, "destination != null");
-					l.Destination = destination;
-				}
-			}
-		}
-
 		
-		public override void Add (IdentifiedElement child) {
-			Logger.Assert (child != null, "child != null");
-			if (!children.Contains(child)) {
-				children.Add (child);
+		public void AddNode (Node node)
+		{
+			if (node != null && !nodes.Contains (node.ID)) {
+				nodes[node.ID] = node;
 			}
 		}
 
-		public override void Remove (IdentifiedElement child) {
-			children.Remove (child);
-		}
-
-		public override IdentifiedElement[] GetChildrenAt (Point p) {
-			ArrayList elements = new ArrayList ();
-			foreach (IdentifiedElement e in children) {
-				if (e.Intersects (p)) {
-					elements.Add (e);
-				}
+		public void AddLink (Link link)
+		{
+			if (link != null && !links.Contains (link.ID)) {
+				links[link.ID] = link;
 			}
-			return (IdentifiedElement[]) 
-				elements.ToArray (typeof (IdentifiedElement));
 		}
 
-		public override IdentifiedElement GetChild (string id) {
-			foreach (IdentifiedElement e in children) {
-				if (e.ID == id) {
-					return e;
-				}
-			}
-			return null;
+		public Node GetNode (int id)
+		{
+			return (Node) nodes[id];
 		}
 
-		// geometric methods
-		public override bool Intersects (Point p) {
-			return false;
+		public Link GetLink (int id)
+		{
+			return (Link) links[id];
 		}
-
-		public override void MoveTo (Point p) {
-		}		
 	}
 }

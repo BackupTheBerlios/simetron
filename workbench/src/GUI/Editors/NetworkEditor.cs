@@ -6,7 +6,7 @@ namespace Simetron.GUI.Editors {
 	public class NetworkEditor : Label {
 		Network network;
 
-		public NetworkEditor (Network network) : base (network.Label) {
+		public NetworkEditor (Network network) : base ("Test") {
 			this.network = network;
 		}
 	}

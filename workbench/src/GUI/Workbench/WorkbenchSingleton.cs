@@ -5,6 +5,8 @@ namespace Simetron.GUI.Workbench {
 	using Simetron.Logging;
 	using Simetron.GUI.Core;
 	using Simetron.Data;
+	using Simetron.Data.NetworkTopology;
+	using Simetron.Data.Providers;
 
 	public sealed class WorkbenchSingleton {
 		internal const string GLADEFILE = "workbench.glade";
@@ -12,15 +14,18 @@ namespace Simetron.GUI.Workbench {
 		private ArrayList views = new ArrayList ();
 		private WorkbenchView activeView;
 		private WorkbenchController controller;
-		private Workspace model;
+		//private Workspace model;
 
 		private WorkbenchSingleton () {
+			ProviderFactory.GetProvider (typeof (Network));
 			// read metadata.xml using StoreFactory
+			/*
 			IStore store = StoreFactory.Instance.CreateStore (typeof (Workspace),
 									  StoreMode.XML);
 			store.OpenConnection (GSimetronMain.MetadataFile);
 			model = (Workspace) store.Read ();
 			store.CloseConnection ();
+			*/
 			controller = new WorkbenchController ();
 		}
 
@@ -30,9 +35,9 @@ namespace Simetron.GUI.Workbench {
 			get { return activeView; }
 		}
 
-		public Workspace Workspace {
-			get { return model; }
-		}
+		//public Workspace Workspace {
+		//	get { return model; }
+		//}
 
 		public WorkbenchView CreateWorkbenchView () {
 			WorkbenchView view = new WorkbenchView (controller);

@@ -41,7 +41,7 @@ namespace Simetron.GUI.Dialogs {
 			}
 		}
 
-		public StoreMode Mode {
+		/*public StoreMode Mode {
 			get {
 				if (fsRadioButton.Active) {
 					return StoreMode.XML;
@@ -49,7 +49,7 @@ namespace Simetron.GUI.Dialogs {
 					return StoreMode.DBMS;
 				}
 			}
-		}
+			}*/
 		
 		public bool OkClicked {
 			get {

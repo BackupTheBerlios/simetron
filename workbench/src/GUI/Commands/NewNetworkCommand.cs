@@ -12,7 +12,7 @@ namespace Simetron.GUI.Commands {
 		}
 
 		public bool Run () {
-			Hashtable names = new Hashtable ();
+			/*Hashtable names = new Hashtable ();
 			Reference[] projects = WorkbenchSingleton.Instance.Workspace.Projects.References;
 			foreach (Reference r in projects) {
 				Project p = (Project) WorkbenchSingleton.Instance.Workspace.Projects[r];
@@ -44,6 +44,7 @@ namespace Simetron.GUI.Commands {
 
 			Logger.Debug ("Created new network : " + dialog.NetworkName + 
 				      " , for project: " + dialog.ProjectName);
+			*/
 
 			return true;
 		}

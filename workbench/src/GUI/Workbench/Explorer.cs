@@ -15,9 +15,10 @@ namespace Simetron.GUI.Workbench {
 			
 			store = new TreeStore (typeof (string));
 			this.Model = store;
-			PopulateStore ();
+			//PopulateStore ();
     		}
 		
+/*
 		private void PopulateStore () {
 			Workspace ws = WorkbenchSingleton.Instance.Workspace;
 
@@ -64,6 +65,7 @@ namespace Simetron.GUI.Workbench {
 			store.AppendValues (iter, "X :" + node.Point.X);
 			store.AppendValues (iter, "Y :" + node.Point.Y);
 		}
+*/
 	}
 }
 

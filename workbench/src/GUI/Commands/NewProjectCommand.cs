@@ -10,6 +10,7 @@ namespace Simetron.GUI.Commands {
 		}
 
 		public bool Run () {
+			/*
 			string[] existingProjects = WorkbenchSingleton.Instance.Workspace.Projects.Names;
 			NewProjectDialog dialog = new NewProjectDialog (existingProjects);
 			dialog.Run ();
@@ -22,6 +23,7 @@ namespace Simetron.GUI.Commands {
 			reference.Mode = dialog.Mode;
 			Project p = new Project ();
 			WorkbenchSingleton.Instance.Workspace.Projects[reference] = p;
+			*/
 			return true;
 		}
 	}

@@ -2,6 +2,8 @@ simetrondir=$(libdir)
 simetron_DATA=Simetron.Logging.dll Simetron.Data.dll simetron.exe
 CLEANFILES=Simetron.Logging.dll Simetron.Data.dll simetron.exe
 CSC=mcs
+JAY=jay
+JAY_SKEL=/usr/share/jay/skeleton.cs
 CSFLAGS=/debug /define:DEBUG /define:TRACE
 CLRVM=mono --debug
 
@@ -10,12 +12,19 @@ logging_sources= \
 logging_references = 
 logging_resources = 
 
+MITSIM_NPARSER_JAY=$(srcdir)/Data/Providers/Mitsim/parser/MitsimNetworkParser.jay
+MITSIM_NPARSER_CS=$(srcdir)/Data/Providers/Mitsim/parser/MitsimNetworkParser.cs
+
 data_sources= \
 	$(srcdir)/Data/*.cs \
-	$(srcdir)/Data/NetworkTopology/*.cs
+	$(srcdir)/Data/NetworkTopology/*.cs \
+	$(srcdir)/Data/Geometry/*.cs \
+	$(srcdir)/Data/Providers/*.cs \
+	$(srcdir)/Data/Providers/Mitsim/*.cs \
+	$(MITSIM_NPARSER_CS)
 data_references =
 data_resources = \
-	/r:Simetron.Logging.dll
+	/r:Simetron.Logging.dll 
 
 simetron_sources = \
 	$(srcdir)/GUI/Commands/*.cs \
@@ -38,6 +47,9 @@ simetron_resources = \
 
 Simetron.Logging.dll: $(logging_sources)
 	$(CSC) $(CSFLAGS) $(logging_resources) $(logging_references) /t:library /out:Simetron.Logging.dll $(logging_sources)
+
+$(MITSIM_NPARSER_CS): $(MITSIM_NPARSER_JAY)
+	$(JAY) -c $(MITSIM_NPARSER_JAY) < $(JAY_SKEL) > $(MITSIM_NPARSER_CS)
 
 Simetron.Data.dll: $(data_sources) Simetron.Logging.dll
 	$(CSC) $(CSFLAGS) $(data_resources) $(data_references) /t:library /out:Simetron.Data.dll $(data_sources)
