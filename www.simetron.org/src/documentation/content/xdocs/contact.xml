@@ -6,14 +6,8 @@
   </header> 
   <body> 
     	<section>
-		<title>Lead Developer</title>
+		<title>Maintainer</title>
 			<p>Bruno Fernandez-Ruiz (<link href="mailto:brunofr@olympum.com">brunofr@olympum.com</link>)</p>
-	</section>
-	<section>
-		<title>Contributors</title>
-			<p>Pekka Enberg</p>
-			<p>Tomer Toledo</p>
-			<p>Haris Koutsopoulos</p>
 	</section>
   </body>
 </document>
