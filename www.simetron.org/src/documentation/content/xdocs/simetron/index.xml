@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
+<document> 
+  <header> 
+    <title>Metropolitan Traffic Simulator</title> 
+  </header> 
+  <body> 
+    <section>
+      <title>Traffic Simulation</title>
+				<p>Traffic simulation focuses on simulating traffic flows over time. Transportation practitioners mainly use traffic simulation for planning, usually resulting in multi-million dollar savings in infrastructure costs. Other uses of traffic simulation include traffic control management assistance, for example for determining the impact of a traffic control strategy before it is actually implemented, also leading to enormous savings in terms of congestion and emission reductions. Finally, to a lesser degree, other uses of traffic simulation are Advanced Traffic Information Systems (ATIS) and Advanced Traffic Management Systems (ATMS).</p>
+		</section>
+		<section>
+			<title>Motivation</title>
+<p>Researchers continuously develop new simulation models that they would like to test, but because current simulation software is difficult to extend or not possible at all because of licensing issues, researchers spend a considerable amount of time and effort building their own simulation software instead of modeling traffic behavior. By providing an open source framework, we ensure that research efforts are focused on model development rather than on software engineering. Additionally, we hope that the open source licensing scheme of Simetron encourages the traffic simulation community to share their work.</p>
+<p>Practitioners benefit from Simetron by using the leading models. Additionally, researchers get extremely valuable feedback as practitioners use their models.</p>
+    </section>
+  </body>
+</document>

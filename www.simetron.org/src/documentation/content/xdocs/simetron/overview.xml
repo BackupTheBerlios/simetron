@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
+<document> 
+  <header> 
+    <title>Overview</title> 
+  </header> 
+  <body> 
+    <section>
+      <title>Limitations of Current Simulation Software</title>
+<p>Typically, traffic simulation models can be classified into two types based on the granularity of the modeling of the traffic phenomena: macroscopic and microscopic. The former represent the traffic with macroscopic flow/density/speed functions, while the later represent the individual vehicle behavior, including car-following, lane-changing, yielding and merging, etc. based on socio-demographic characteristics of the driver. A discretization of time is normally used, and at each time step, behavioral choices are calculated and vehicles' positions updated as necessary.</p>
+
+<p>Macroscopic simulation can provide adequate results for applications that do not require a high degree of accuracy in the results, such as regional planning. However, practitioners normally require more precise information about queues, flows, speeds and densities than those that can be provided by a macroscopic simulation model. Microscopic simulation models are theoretically able to provide such required level of accuracy, but nevertheless face several significant obstacles.</p>
+
+<p>The first obstacle in microscopic traffic simulation is the complexity of the models describing the drivers decisions. Driver's behavior is complex to model on first place, and the models must be simplified in order to reduce the computational burden. This lack of accurate models is probably the most important drawback of microscopic simulation. The complexity of modeling does not pay off with equally accurate results.</p>
+
+<p>Futhermore, due to the level of detail inherent with microscopic simulation models, the computational resources necessary to simulate a large urban area consisting of numerous streets and roads is very high. Network geometry, topology, socio-demographic data, trip data, historical data, etc. consume very large amounts of memory, as the number of modeled network elements increases. Furthermore, the number of concurrent vehicles that are in a network can be very large, and the memory and CPU power required to be able to move all those vehicles is highly significant.</p>
+
+<p>Use of microscopic traffic simulation software has been usually limited to simplified networks. Side streets are normally eliminated from the model because they are very expensive computationally and do not increase significantly the quality of the results. Still, the execution time vs simulation ratio of existing simulation software products ranges from 0.4 for the fastest to 1.5 for the slowest. Parallelization and software distribution have been used to solve this limitation, but still most microscopic simulation software packages are not able to simulate real life networks at a microscopic level of detail.</p>
+
+<p>As a result, microscopic traffic simulation software does not solve the requirements of neither transportation planners nor traffic management centers.</p>
+	</section>
+	<section>
+		<title>Mesoscopic Traffic Simulation</title>	
+<p>Mesoscopic traffic simulation is valid a intermediate solution between microscopic and macroscopic models. Mesoscopic simulations can model the network and the vehicle movements at the same level of detail as microscopic simulations. However, because the driver behavior is highly simplified and the vehicle dynamics are determined by macroscopic calculations (i.e. capacity constraints), it is possible to model larger areas and move more cars than it would be possible with a microscopic simulation.</p>
+
+<p>With mesoscopic traffic simulation, we are able to provide results at a level of significance close to those available with microscopic simulation, while gaining in simulation speeds, reducing resource constraints, and simplifying the modeling work.</p>
+
+<p>We believe that mesoscopic simulation can provide results at least as good as microscopic simulation to transportation practitioners and researchers, while being easier to develop and maintain.</p>
+	</section>
+  </body>
+</document>

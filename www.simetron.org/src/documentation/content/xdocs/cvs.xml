@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
+<document> 
+  <header> 
+    <title>CVS Repositories</title> 
+  </header> 
+  <body> 
+    	<section>
+		<title>Anonymous CVS</title>
+			<p>To obtain the sources with anonymous CVS, you need to login into our berlios CVS repository. When prompted for a password, press enter. You will have to do this only once:</p>
+			<p><code>cvs -d:pserver:anonymous@cvs.simetron.berlios.de:/cvsroot/simetron login</code></p>
+    	<p>Once you have logged on, you can checkout the sources for specific modules. In order to check out a module named <code>module</code> using cvs:</p>
+    	<p><code>cvs -z3 -d:pserver:anonymous@cvs.simetron.berlios.de:/cvsroot/simetron co module</code></p>
+    	<p>Whenever you would like to update your view:</p>
+    	<p><code>cvs -z3 update -dP</code></p>
+    	<p>Alternatively, you can browse all the Simetron modules using the <fork href="http://cvs.berlios.de/cgi-bin/viewcvs.cgi/simetron/">Web-Based interface to our CVS repository</fork>.</p>
+    	</section>
+  </body>
+</document>

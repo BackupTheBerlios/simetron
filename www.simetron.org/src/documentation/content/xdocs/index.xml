@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
+<document> 
+  <header> 
+    <title>S I M E T R O N ::.:.. </title> 
+  </header> 
+	<body> 
+	 	<section>
+			<title>The Simetron Project</title>
+			<p>The Simetron Project is an open source project, sponsored by The Olympum Software Group, that aims at creating a modular traffic simulator for metropolitan networks.</p>
+
+			<p>Simetron is designed as an open plugin architecture, written in C#, with multi-platform support via the <fork href="http://www.go-mono.com/">mono runtime</fork>. Simetron consists of the following modules:</p>
+			<ul>
+				<li>Workbench - A graphical user interface for monitoring and controlling simulations, analyzing results, and editing networks. [Started]</li>
+				<li>Microkernel - The small footprint simulation engine based on a distributed workflow engine. [Started]</li>
+				<li>Supply Simulator. [Not Started]</li>
+				<li>Demand Simulator. [Not Started]</li>
+				<li>TMC Simulator. [Not Started]</li>
+				<li>ATIS/ATMS Simulator.[Not Started]</li>
+			</ul>
+		</section>
+		<section>
+			<title>Hosted Subprojects</title>								
+			<p>During the development of Simetron we continously face technical problems, for which we create libraries that have no dependencies with Simetron. You can use these in your project.</p>
+			<ul> 
+	 			<li>GtkGL# - A C# library that integrates <fork href="http://www.opengl.org/">OpenGL</fork> with the <fork href="http://gtk-sharp.sf.net">Gtk# windowing toolkit.</fork></li>
+				<li>PVM.NET - C# bindings for <fork href="http://www.csm.ornl.gov/pvm/pvm_home.html">PVM</fork>.</li>
+				<li>JMS.NET - A JMS provider/bridge for .NET.</li>
+				<li>Cibeles - An embedded workflow engine.</li>
+			</ul>
+	</section>
+	<section>
+		<title>Licensing</title>
+			<p>Simetron and the simulator modules are released to the community under the terms of the GNU General Public License, to ensure that this software is free and remains free.</p>
+			<p>The hosted subprojects are released under a BSD license in order to allow the biggest audience to benefit from them. You can use, modify, hack, copy, distribute these libraries	in your projects, both open source and proprietary.</p>
+			<p>If you would like to discuss the license terms, or are interested in obtaining a custom license agreement that suits your business needs, please write to licensing@simetron.org.</p>
+	</section>
+	<section>
+		<title>Getting Involved</title>
+			<p>Anyone can participate. All interested developers are welcome to join and participate. Bug reports and patches are highly welcome.</p>
+	</section>  
+  </body>
+</document>

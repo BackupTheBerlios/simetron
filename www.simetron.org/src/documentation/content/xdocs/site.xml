@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<!--
+Forrest site.xml
+
+This file contains an outline of the site's information content.  It is used to:
+- Generate the website menus (though these can be overridden - see docs)
+- Provide semantic, location-independent aliases for internal 'site:' URIs, eg
+<link href="site:changes"> links to changes.html (or ../changes.html if in
+  subdir).
+- Provide aliases for external URLs in the external-refs section.  Eg, <link
+  href="ext:cocoon"> links to http://xml.apache.org/cocoon/ 
+
+See http://xml.apache.org/forrest/linking.html for more info
+-->
+
+<site label="The Simetron Project" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="">
+
+<about label="About">
+	<index label="Welcome" href="index.html" description="Welcome to Simetron"/>
+	<news label="News" href="news.html" description="News about Simetron"/>
+	<lists label="Mailing lists" href="lists.html" description="Mailing lists"/>
+	<bugzilla label="Bug Database" href="bugzilla.html" description="Bug database"/>
+	<cvs label="CVS Repositories" href="cvs.html" description="Access to CVS"/>
+	<contact label="Contact us" href="contact.html" description="Contact info"/>	
+</about>
+
+<simetron label="Simetron" href="simetron/" tab="simetron">
+	<index label="Motivation" href="index.html" description="Motivation of Traffic Simulation"/>
+	<overview label="Overview" href="overview.html" description="Project Overview"/>	
+	<features label="Features" href="features.html" description="Main Features"/>
+	<screenshots label="Screenshots" href="screenshots.html" description="Screenshots"/>
+	<downloads label="Downloads" href="downloads.html" description="Downloads"/>
+</simetron>			
+
+<subprojects label="Subprojects" href="subprojects/" tab="subprojects">
+	<overview label="Overview" href="index.html" description="Subprojects Overview"/>	
+	<gtkgl-sharp label="GtkGL#" href="gtkgl-sharp.html" description="GtkGL#"/>
+</subprojects>			
+
+  <all>
+    <whole_site_html label="Whole Site HTML" href="site.html"/>
+    <whole_site_html label="Whole Site PDF" href="site.pdf"/>
+  </all>
+
+  <external-refs>
+    <xml.apache.org href="http://xml.apache.org/">
+      <forrest href="forrest/">
+        <validation href="validation.html"/>
+        <webapp href="your-project.html#webapp"/>
+        <document-v11 href="document-v11.html"/>
+      </forrest>
+      <cocoon href="cocoon/"/>
+    </xml.apache.org>
+  </external-refs>
+
+</site>
