@@ -6,7 +6,7 @@ namespace Simetron.GUI.Core {
 
 	public sealed class SplashWindow {
 		private static Gdk.Pixbuf pixbuf = new Pixbuf (null, 
-							       "pixmaps/splash.jpg");
+							       "splash.jpg");
 		private static Gtk.Dialog window;
 		private static Gtk.Button label;
 		private static bool readyToBeDestroyed = false;

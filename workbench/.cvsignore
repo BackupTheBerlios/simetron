@@ -1,1 +1,8 @@
+configure
+aclocal.m4
+config.status
+config.log
+config.cache
+Makefile.in
+Makefile
 bin

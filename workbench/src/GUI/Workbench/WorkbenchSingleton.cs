@@ -7,7 +7,7 @@ namespace Simetron.GUI.Workbench {
 	using Simetron.Data;
 
 	public sealed class WorkbenchSingleton {
-		internal const string GLADEFILE = "glade/workbench.glade";
+		internal const string GLADEFILE = "workbench.glade";
 
 		private ArrayList views = new ArrayList ();
 		private WorkbenchView activeView;

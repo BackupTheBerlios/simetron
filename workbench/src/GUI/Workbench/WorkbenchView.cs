@@ -10,7 +10,7 @@ namespace Simetron.GUI.Workbench {
 	public class WorkbenchView {
 		// load the icon from the default assembly
 		private readonly static Gdk.Pixbuf icon = new Pixbuf (null, 
-						     "pixmaps/simetron-hicolor-48x48.png");
+								      "simetron-hicolor-48x48.png");
 
 		private Gtk.Window window;
 		private ApplicationBar appbar;
