@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Simetron.Logging {
 	public class StackFrameTraceListener : TextWriterTraceListener {
-		public StackFrameTraceListener () : base (Console.Out) {}
+		public StackFrameTraceListener (TextWriter writer) : base (writer) {}
 		
 		public override void Write (string message) {
 			StackFrame sf = new StackFrame (6, true);
