@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+	<system.diagnostics>
+		<trace autoflush="false" indentsize="4">
+        		<listeners>
+        			<add name="myListener" type="System.Diagnostics.TextWriterTraceListener" initializeData="Console.Out" />
+        		</listeners>
+		</trace>
+	</system.diagnostics>
+</configuration>

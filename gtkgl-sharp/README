@@ -1,0 +1,125 @@
+GtkGL# Graphics Library - C# bindings for OpenGL on Gtk#
+(c) 2003, Bruno Fernandez-Ruiz, (brunofr@olympum.com)
+========================================================
+
+03/Sept/2003
+
+Introduction (the Gtk side)
+---------------------------
+
+GtkGL# is a library that allows to use OpenGL from Gtk# components.
+It is currently in very alpha state, so use it as your own risk.
+I am posting it so that people can play with it ...
+
+I needed to be able to draw OpenGL from my Gtk# programs, sort of the
+same thing CsGL does for System.Windows.Forms.
+
+I knew this was already available in Gtk+ in C, but not in C#. I 
+started with GtkGLExt, which allows to draw OpenGL from any Gtk widget,
+and created C# bindings using Gtk# GAPI generator (excellent stuff!).
+Unfortunately in order for GtkGLExt to allow drawing on any widget, it 
+intrudes the GtkWidget, GdkWindow and GdkPixmap APIs. In C this is fine,
+but in C# it is not. This and some other complications with the interface
+made me look for something else.
+
+[You can get gtkglext from http://gtkglext.sourceforge.net, and it is
+normally available already in most Linux distributions.]
+
+GtkGLArea is a non-maintained C library that provides its own widget,
+called GtkGLArea for drawing OpenGL on Gtk+. The widget works, but
+unfortunately the latest version released, 1.99, has some bugs. 
+Creating C# bindings for GtkGLArea was straight forward after minor
+changes to the API.
+
+[You can get get gtkglarea directly from the gnome CVS, or as a tarball
+also from Gnome's ftp. It normally available for most most Linux 
+distributions.]
+
+Introduction (the OpenGL side)
+------------------------------
+
+It seems like OpenGL is one of the favorite native libraries for us
+developers to bind :) On a quick search on Google I found:
+
+[1] glgen, a module on mono's CVS - this is a very interesting library,
+as it is automatically generated using's Gtk# GAPI. However, I could
+not get the gears example to work on Mono 0.26.
+
+[2] MonoGLo, another C# binding, more .NET style. Available in SF.NET.
+
+[3] CsGL, possibly the most used OpenGL bindings for .NET. However, it 
+does not support Mono and Linux yet (no glx), so I could not consider
+it.
+
+[4] Tao, http://www.randyridge.com/tao/, which seems to be the most
+complete. However, it is open-binary, not open-source. Sorry.
+
+[5] OpenGL-C#, http://www.colinfahey.com/opengl/csharp.htm, released
+to the public domain by Colin Fahey. It is essentially a C# direct
+mapping of the C library. I liked this, because it allows to quickly
+port existing C OpenGL programs to C#. This is the library I am using.
+
+
+Requirements
+------------
+
+1. Download, make and install gtkglarea. 
+
+2. Tell mono where to find the library:
+
+<configuration>
+	<...>
+	<dllmap dll="gtkgl" target="libgtkgl-2.0.so" />
+	<...>
+</configuration>
+
+of course, the actual name of the library may depend. Make sure that
+the library is accessible to the mono runtime (LD_LIBRARY_PATH).
+
+3. Double check that you have the GL and GLU libraries installed as
+libGL.so and libGLU.so
+
+Building
+--------
+
+The tarball comes with pre-built binaries. You can also use the provided
+makefiles, but bear with me because I have not ensured that it will 
+work on any installation.
+
+Directories
+-----------
+
+./gtkgl-sharp/sources contains the gtkglarea sources, from which gapi.pl
+generates the XML API. You can run 'make get-source-code' to fetch the
+tarball for gtkglarea from the Gnome FTP.
+
+./gtkgl-sharp/api contains the generated XML API.
+
+./gtkgl-sharp/gdkgl and ./gtkgl-sharp/gtkgl contain the actual C# code.
+
+./gtkgl-sharp/sample contains Simple.cs, directly ported from simple.c
+included in gtkglarea. Compare the code to appreciate the beauty of 
+Gtk# :)
+
+Limitations
+-----------
+
+GtkGLArea has bugs due to non-released X-Window resources. I may fix 
+them one day if it becomes too annoying ...
+
+Future Plans
+------------
+
+I am thinking currently about creating a Gtk# component, only in C#, that 
+would not require the gtkglarea C library, but only pure .NET assemblies:
+Gtk# and OpenGl#. Doing this is not straight forward, because I need to 
+expose some interesting Gtk+ methods to get the X-Window id or Win32
+handle, but this will surely be a lot of fun.
+
+Questions, Bugs, Comments ...
+-----------------------------
+
+Feel free to send them to brunofr@olympum.com
+
+
+[Last Updated 03/Sept/2003]

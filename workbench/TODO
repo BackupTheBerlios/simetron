@@ -1,0 +1,158 @@
+Added 2003/08/20
+===============
+
+* Create a document type registry, to associate types with handlers [Done 21/08]
+
+* Now that glade window is not modal, multiple views are possible, however,
+DocumentStore is sending events to all windows, closing one window closes
+all windows, ... fix this to be true MDI and multiple window instance pg.
+[Done 08/20]
+
+* Control the number of lines in the text buffer
+
+* Enable logging to file on top of the Console.Out
+
+* Start using config from file - if possible using the config and appSettings
+from the standard CLR.
+
+* Assertions should only be used in debugging - errors that can happen during
+runtime should be exceptions. Audit the code for compliance.
+
+* Create a mechanism similar to MS Application.ExceptionListener += new ..., I
+bet this is as simple as breaking up the Application.Run () into queue events, 
+and brace around try/catch [Done 08/20]
+
+* Complete the try/catch in GSimetronMain to implement it as a delegate, so that
+we can have multiple classes listening to the problems. For example, we could
+use this in the future for bug submissions.
+
+Added 2003/08/19
+================
+
+* Fix DEBUG and TRACE. Nothing gets printed right now. [Done 08/19]
+
+* Use the ManagedTreeDemo.cs from gtk-sharp/samples to store the network in the
+TreeStore and being able to access it from there.
+
+
+Added 2003/08/16
+================
+
+* Currently no check is done while opening documents - things to fix:
+	- Parsing exceptions should be propagated
+	- Only registered document types should be allowed -> which implies
+	we need to add a document type registration thingy to the DocumentStore.
+	- The same document can be opened several times --- fix this!
+
+* Diacanvas2 does not work well while trying to instantiate two canvases ... so I need
+to figure out something else. Possibilities are gnome canvas or drawing area. I need to 
+check availability in Windows of the required native libraries. I would like to keep the
+required native libraries to a minimum.
+
+GUI.Model
+=========
+
+* By default, the Model should be stored in a DBMS. The GUI should propose
+the option "Import ..." and "Export As ..." for every element in a project.
+Supporting two storage models concurrently is simply an overkill, and because
+the goal is scalability, we start off with the DBMS strategy.
+
+* Implement the events (Added, Modified and Removed)
+
+* Write test classes to cover consistency. In the current implementation
+it is very difficult to determine whether a network that has (a) been 
+created from scratch; or (b) restored from store (e.g. XML file), is in
+consistent state. By consistency I mean making sure that all nodes and
+links know about each other properly, that there are no "lost" elements.
+
+* Node and Link should be made abstract, which they are not currently to 
+allow testing. We should implement at least one type of final Node and
+one type of final Link that implements all the methods. Also the current
+implementations, Node and Link have no children. This should be fixed. 
+For example, Link should have, at least, lanes.
+
+* Create a "Model" class that contains, among others, Networks. A Model
+class should be an abstraction of the workbench logical model. In other
+words, the set of open files. This Model should be connected to the
+workbench explorer.
+
+* As a second priority, and only once we are able to associate the 
+workbench explorer with an editor, we should look at how to make links
+with multiple geometric segments. Using splines can be an option, but 
+only if it does not kill performance!!
+
+GUI.Store
+=========
+
+* Add DBMS support for network storage using SQLite. It should be possible
+to create for example a network, save it in a file, later on open it and
+save it in DBMS.
+
+
+GUI.Workbench
+=============
+
+* Implement explorer connected with the Model, using the TreeView.
+
+* Fix the Perspective to include the real explorer.
+
+GUI.Editors
+===========
+
+* Start the network editor
+
+GUI.Core
+========
+
+* Start the Plugin manager, so that we can start implementing classes
+outside of the main assembly.
+
+Makefile
+========
+
+* Look into mono's new build system and see if there are any ideas we
+can take from them, like not repeating the settings all around the place.
+
+* Split the assemblies. We need to start using the internal member modifier
+to ensure correct OOP!
+
+ 
+Website
+=======
+
+* Remove GUESTBOOK, SITEMAP and PRINT links.
+
+* Fix typos.
+
+* Merge penrose-logo with background picture. For some reason, only
+Mozilla is able to render a raster without background on top of another
+picture. MSIE adds a funny "mist" gray layer which looks bad!!
+
+* Add weblog to main page.
+
+Licensing
+=========
+
+* Pro GPL: enforces researchers to release their code also under the GPL.
+I am only interested in making sure that simetron is used widely. The GPL
+may be a problem with some research institutions, which would not allow 
+their work to be released under a GPL. Some possibilites are: a) to stay
+propietary until needed because of 3rd party software - for example 
+the dxflib is only released under GPL, so is the diacanvas2; b) release
+under a GPL compatible license, but without the GPL restrictions.
+
+* Update on GPL (08/20): GPL enforces governments and is the only legally
+proven license in court (to be in IBM vs SCO).
+
+* The important part is to provide a framework where people can really 
+attach their stuff, not only because this creates momentum, but because it
+would also accelerate development, by allowing specialized teams to interface
+only by Xml configuration files. Just a thought ...
+
+Dependencies
+===========
+
+* Keep track of our dependencies (build and run). E.g. mono, gtk-sharp, ...
+
+* Building and running on windows is currently not possible with MS.NET. I
+have not tried with mono on windows.

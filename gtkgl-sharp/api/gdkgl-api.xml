@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<api>
+<!--
+
+        This file was automatically generated.
+        Please DO NOT MODIFY THIS FILE, modify .metadata files instead.
+
+-->
+  <namespace name="GdkGL" library="gtkgl">
+    <struct name="Context" cname="GdkGLContext" opaque="true">
+      <method name="AttrlistShareNew" cname="gdk_gl_context_attrlist_share_new" shared="true">
+        <return-type type="GdkGLContext*"/>
+        <parameters>
+          <parameter type="int*" name="attrlist"/>
+          <parameter type="GdkGLContext*" name="sharelist"/>
+          <parameter type="gint" name="direct"/>
+        </parameters>
+      </method>
+      <constructor cname="gdk_gl_context_new">
+        <parameters>
+          <parameter type="GdkVisual*" name="visual"/>
+        </parameters>
+      </constructor>
+      <method name="Ref" cname="gdk_gl_context_ref">
+        <return-type type="GdkGLContext*"/>
+      </method>
+      <method name="ShareNew" cname="gdk_gl_context_share_new" shared="true">
+        <return-type type="GdkGLContext*"/>
+        <parameters>
+          <parameter type="GdkVisual*" name="visual"/>
+          <parameter type="GdkGLContext*" name="sharelist"/>
+          <parameter type="gint" name="direct"/>
+        </parameters>
+      </method>
+      <method name="Unref" cname="gdk_gl_context_unref">
+        <return-type type="void"/>
+      </method>
+    </struct>
+    <struct name="Pixmap" cname="GdkGLPixmap" opaque="true">
+      <method name="MakeCurrent" cname="gdk_gl_pixmap_make_current">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter type="GdkGLContext*" name="context"/>
+        </parameters>
+      </method>
+      <constructor cname="gdk_gl_pixmap_new">
+        <parameters>
+          <parameter type="GdkVisual*" name="visual"/>
+          <parameter type="GdkPixmap*" name="pixmap"/>
+        </parameters>
+      </constructor>
+      <method name="Ref" cname="gdk_gl_pixmap_ref">
+        <return-type type="GdkGLPixmap*"/>
+      </method>
+      <method name="Unref" cname="gdk_gl_pixmap_unref">
+        <return-type type="void"/>
+      </method>
+    </struct>
+    <class name="Global" cname="GdkGLGlobal">
+      <method name="ChooseVisual" cname="gdk_gl_choose_visual" shared="true">
+        <return-type type="GdkVisual*"/>
+        <parameters>
+          <parameter type="int*" name="attrlist"/>
+        </parameters>
+      </method>
+      <method name="GetConfig" cname="gdk_gl_get_config" shared="true">
+        <return-type type="int"/>
+        <parameters>
+          <parameter type="GdkVisual*" name="visual"/>
+          <parameter type="int" name="attrib"/>
+        </parameters>
+      </method>
+      <method name="GetInfo" cname="gdk_gl_get_info" shared="true">
+        <return-type type="gchar*"/>
+      </method>
+      <method name="MakeCurrent" cname="gdk_gl_make_current" shared="true">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter type="GdkDrawable*" name="drawable"/>
+          <parameter type="GdkGLContext*" name="context"/>
+        </parameters>
+      </method>
+      <method name="SwapBuffers" cname="gdk_gl_swap_buffers" shared="true">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GdkDrawable*" name="drawable"/>
+        </parameters>
+      </method>
+      <method name="UseGdkFont" cname="gdk_gl_use_gdk_font" shared="true">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GdkFont*" name="font"/>
+          <parameter type="int" name="first"/>
+          <parameter type="int" name="count"/>
+          <parameter type="int" name="list_base"/>
+        </parameters>
+      </method>
+    </class>
+    <class name="Wait" cname="GdkGlWait_">
+      <method name="Gdk" cname="gdk_gl_wait_gdk" shared="true">
+        <return-type type="void"/>
+      </method>
+      <method name="Gl" cname="gdk_gl_wait_gl" shared="true">
+        <return-type type="void"/>
+      </method>
+    </class>
+  </namespace>
+</api>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Network xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="296b82e4-9309-4ac8-8ccf-5d250f994e7b" Label="Unnamed">
+  <Nodes>
+    <Node ID="93dae606-3cf5-45e7-b6f5-ad1cb3bd0f1e" Label="Unnamed">
+      <Point Y="0" X="0" />
+    </Node>
+    <Node ID="c0688a29-b2db-45f9-8fdb-54e8179a102b" Label="Unnamed">
+      <Point Y="1" X="0" />
+    </Node>
+  </Nodes>
+  <Links>
+    <Link ID="7cb489b1-ce55-49be-a3b6-a25f975453d1" Label="Unnamed">
+      <OriginID>93dae606-3cf5-45e7-b6f5-ad1cb3bd0f1e</OriginID>
+      <DestinationID>c0688a29-b2db-45f9-8fdb-54e8179a102b</DestinationID>
+    </Link>
+    <Link ID="c88b23dd-0eaf-4456-adf4-c41ae7fe6d9c" Label="Unnamed">
+      <OriginID>c0688a29-b2db-45f9-8fdb-54e8179a102b</OriginID>
+      <DestinationID>93dae606-3cf5-45e7-b6f5-ad1cb3bd0f1e</DestinationID>
+    </Link>
+  </Links>
+</Network>

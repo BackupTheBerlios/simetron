@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<metadata>
+
+<!-- type hides -->
+<!-- arrays -->
+<rule>
+  <class name="GtkGLArea">
+    <constructor>gtk_gl_area_new</constructor>
+  </class>
+  <data>
+    <attribute target="param">
+     <filter level="type">int*</filter>
+     <name>array</name>
+     <value>1</value>
+    </attribute>
+  </data>
+</rule>
+<!-- method signal and property hides -->
+<rule>
+   <class name="GtkGLArea">
+    <constructor>gtkgl_area_new_vargs</constructor>
+    <method>Begingl</method>
+    <method>Endgl</method>
+    <method>Swapbuffers</method>
+    <method>Size</method>
+    <method>ShareNew</method>
+   </class>
+   <data>
+    <attribute target="method">
+      <name>hidden</name>
+      <value>1</value>
+    </attribute>
+   </data>
+</rule>
+<!-- renames -->
+<!-- disable default constructor -->
+<!-- ref and out parameters -->
+<!-- variable arguments -->
+<rule>
+  <class name="GtkGLArea">
+    <constructor>gtk_gl_area_new_vargs</constructor>
+  </class>
+  <data>
+    <attribute target="parameters">
+      <name>attrList</name>
+      <value>length_param</value>
+    </attribute>
+  </data>
+</rule>
+<!-- return value -->
+<!-- constructor collision hints -->
+<!-- overloads -->
+
+</metadata>
