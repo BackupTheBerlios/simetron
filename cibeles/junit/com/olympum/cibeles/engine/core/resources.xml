@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+	<resource id="SimpCalcCons" member="constructor" class="com.olympum.cibeles.engine.core.SimpleCalculator">
+		<arg type="java.lang.Integer" />
+	</resource>
+	<resource id="Randomizer" member="method" class="com.olympum.cibeles.engine.core.SimpleCalculator" method="generateRandom"/>
+	<resource id="Sum" member="method" class="com.olympum.cibeles.engine.core.SimpleCalculator" method="sum">
+		<arg type="java.lang.Integer" />
+		<arg type="java.lang.Integer" />
+	</resource>
+	<resource id="DummyStatic" member="static" class="com.olympum.cibeles.engine.core.DummyStatic" method="dummy">
+		<arg type="java.lang.Integer" />
+	</resource>
+</resources>

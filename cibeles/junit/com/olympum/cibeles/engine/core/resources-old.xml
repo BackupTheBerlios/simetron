@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- FIXME: 
+Instead of this file we could use:
+. A transformed file from the XML Documentation
+. Type discovery, looking at the assembly
+-->
+<resources>
+	<!-- each resource may involve a constructor, a static method or a 
+		standard instance method. 
+		FIXME (brunofr 28/04/02) Look how to introduce assembly name
+		-->
+	<resource id="SimpCalcCons" member="constructor" class="com.olympum.cibeles.engine.core.SimpleCalculator">
+		<arg name="b" type="java.lang.Integer" description="the numerical base" />
+	</resource>
+	<resource id="Randomizer" member="method" class="com.olympum.cibeles.engine.core.SimpleCalculator" method="generateRandom">
+		<return type="java.lang.Integer" description="a random number" />
+	</resource>
+	<resource id="Sum" member="method" class="com.olympum.cibeles.engine.core.SimpleCalculator" method="sum">
+		<arg name="a" type="java.lang.Integer" description="first factor" />
+		<arg name="b" type="java.lang.Integer" description="second factor" />
+		<return type="java.lang.Integer" description="sum" />
+	</resource>
+	<resource id="DummyStatic" member="static" class="com.olympum.cibeles.engine.core.DummyStatic" method="dummy">
+		<arg name="d1" type="java.lang.Integer" description="input" />
+		<return type="java.lang.Integer" description="output" />
+	</resource>
+</resources>

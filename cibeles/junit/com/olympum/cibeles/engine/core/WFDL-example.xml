@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<paths>
+		<path id="SimplePath" version="0.01" vendor="Olympum" created="2002/04/21">
+			<description>Simple Path to demonstrate WFDL</description>
+			<!-- these are the ports for this path. see links to know
+			how to move the data between the path and the nodes
+			-->
+			<ports>
+				<port id="pv1" description="the base" />
+				<port id="pv2" description="the result" />
+			</ports>
+			<nodes>
+				<node id="A1">
+					<ports>
+						<port id="a1v1"/>
+						<port id="a1v2"/>
+					</ports>
+					<resource>
+						<class>com.olympum.cibeles.engine.core.SimpleCalculator</class>
+						<member>
+							<constructor instance="a2v2">
+								<port id="a1v1" type="java.lang.Integer"/>
+							</constructor>
+						</member>
+					</resource>
+				</node>
+				<node id="A2">
+					<description>Generate a random number</description>
+					<ports>
+						<port id="a2v1" description="the calculator" />
+						<port id="a2v2" description="a random number" />
+					</ports>
+					<implementation refId="Randomizer" instance="a2v1">
+						<return toPort="a2v2" />
+					</implementation>
+				</node>
+				<node id="A3">
+					<description>Generate a random number</description>
+					<ports>
+						<port id="a3v1" description="the calculator" />
+						<port id="a3v2" description="a random number" />
+					</ports>
+					<implementation refId="Randomizer" instance="a3v1" >
+						<return toPort="a3v2" />
+					</implementation>
+				</node>
+				<node id="A4">
+					<description>Sum two numbers</description>
+					<ports>
+						<port id="a4v1" description="calculator" />
+						<port id="a4v2" description="first factor" />
+						<port id="a4v3" description="second factor" />
+						<port id="a4v4" description="the sum" />
+					</ports>
+					<implementation refId="Sum" instance="a4v1">
+						<input fromPort="a4v2" />
+						<input fromPort="a4v3" />
+						<return toPort="a4v4" />
+					</implementation>
+				</node>
+				<node id="A5">
+					<description>Example static</description>
+					<ports>
+						<port id="a5v1" description="int" />
+						<port id="a5v2" description="int" />
+					</ports>
+					<implementation refId="DummyStatic">
+						<input fromPort="a5v1" />
+						<return toPort="a5v2" />
+					</implementation>
+				</node>
+			</nodes>
+			<!-- links represent connections between execution objects
+			a link may optionally be associated with data, but this is
+			not necessary
+			-->
+			<links>
+				<!-- a link goes from one execution object to another
+				execution object and has a unique id 
+				-->
+				<link id="t1" fromObject="SimplePath" toObject="A1">
+					<!-- a connection joins an out port from the fromObject
+					to an in port from the toObject.
+					There may be zero or more connections per link
+					-->
+					<connection fromPort="pv1" toPort="a1v1" />
+				</link>
+				<link id="t2" fromObject="A1" toObject="A2">
+					<connection fromPort="a1v2" toPort="a2v1" />
+				</link>
+				<link id="t3" fromObject="A1" toObject="A3">
+					<connection fromPort="a1v2" toPort="a3v1" />
+				</link>
+				<link id="t4" fromObject="A1" toObject="A4">
+					<connection fromPort="a1v2" toPort="a4v1" />
+				</link>
+				<link id="t5" fromObject="A2" toObject="A4">
+					<connection fromPort="a2v2" toPort="a4v2" />
+				</link>
+				<link id="t6" fromObject="A3" toObject="A4">
+					<connection fromPort="a3v2" toPort="a4v3" />
+				</link>
+				<link id="t7" fromObject="A4" toObject="SimplePath2">
+					<connection fromPort="a4v4" toPort="pv1" />
+				</link>
+				<link id="t8" fromObject="SimplePath2" toObject="SimplePath">
+					<connection fromPort="pv2" toPort="pv2" />
+				</link>
+			</links>
+		</path>
+		<path id="SimplePath2" version="0.01" vendor="Olympum" created="2002/04/21">
+			<description>Simple Path to demonstrate WFDL</description>
+			<!-- these are the ports for this path. see links to know
+			how to move the data between the path and the nodes
+			-->
+			<ports>
+				<port id="pv1" description="the base" />
+				<port id="pv2" description="the result" />
+			</ports>
+			<nodes>
+				<node id="A1">
+					<description>Example static</description>
+					<ports>
+						<port id="a1v1" description="int" />
+						<port id="a1v2" description="int" />
+					</ports>
+					<implementation refId="DummyStatic">
+						<input fromPort="a1v1" />
+						<return toPort="a1v2" />
+					</implementation>
+				</node>
+			</nodes>
+			<links>
+				<link id="t1" fromObject="SimplePath2" toObject="A1">
+					<connection fromPort="pv1" toPort="a1v1" />
+				</link>
+				<link id="t2" fromObject="A1" toObject="SimplePath2">
+					<connection fromPort="a1v2" toPort="pv2" />
+				</link>
+			</links>
+		</path>
+</paths>

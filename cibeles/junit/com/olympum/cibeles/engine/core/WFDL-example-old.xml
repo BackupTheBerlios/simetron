@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<processes>
+		<process id="SimpleProcess" version="0.01" vendor="Olympum" created="2002/04/21">
+			<description>Simple Process to demonstrate WFDL</description>
+			<!-- these are the attributes for this process. see transitions to know
+			how to move the data between the process and the activities
+			-->
+			<attributes>
+				<attribute id="pv1" description="the base" />
+				<attribute id="pv2" description="the result" />
+			</attributes>
+			<activities>
+				<activity id="A1">
+					<description>Create a SimpleCalculator</description>
+					<parameters>
+						<parameter id="a1v1" description="the base" />
+						<parameter id="a1v2" description="the calculator" />
+					</parameters>
+					<implementation refId="SimpCalcCons">
+						<map activity="a1v1" resource="b" />
+						<map resource="_instance_" activity="a1v2" />
+					</implementation>
+				</activity>
+				<activity id="A2">
+					<description>Generate a random number</description>
+					<parameters>
+						<parameter id="a2v1" description="the calculator" />
+						<parameter id="a2v2" description="a random number" />
+					</parameters>
+					<implementation refId="Randomizer">
+						<map activity="a2v1" resource="_instance_" />
+						<map resource="_return_" activity="a2v2" />
+					</implementation>
+				</activity>
+				<activity id="A3">
+					<description>Generate a random number</description>
+					<parameters>
+						<parameter id="a3v1" description="the calculator" />
+						<parameter id="a3v2" description="a random number" />
+					</parameters>
+					<implementation refId="Randomizer">
+						<map activity="a3v1" resource="_instance_" />
+						<map resource="_return_" activity="a3v2" />
+					</implementation>
+				</activity>
+				<activity id="A4">
+					<description>Sum two numbers</description>
+					<parameters>
+						<parameter id="a4v1" description="calculator" />
+						<parameter id="a4v2" description="first factor" />
+						<parameter id="a4v3" description="second factor" />
+						<parameter id="a4v4" description="the sum" />
+					</parameters>
+					<implementation refId="Sum">
+						<map activity="a4v1" resource="_instance_" />
+						<map activity="a4v2" resource="a" />
+						<map activity="a4v3" resource="b" />
+						<map resource="_return_" activity="a4v4" />
+					</implementation>
+				</activity>
+				<activity id="A5">
+					<description>Example static</description>
+					<parameters>
+						<parameter id="a5v1" description="int" />
+						<parameter id="a5v2" description="int" />
+					</parameters>
+					<implementation refId="DummyStatic">
+						<map activity="a5v1" resource="d1" />
+						<map resource="_return_" activity="a5v2" />
+					</implementation>
+				</activity>
+			</activities>
+			<!-- transitions represent connections between execution objects
+			a transition may optionally be associated with data, but this is
+			not necessary
+			-->
+			<transitions>
+				<!-- a transition goes from one execution object to another
+				execution object and has a unique id 
+				-->
+				<transition id="t1" fromObject="SimpleProcess" toObject="A1">
+					<!-- a connection joins an out parameter from the fromObject
+					to an in parameter from the toObject.
+					There may be zero or more connections per transition
+					-->
+					<connection fromParameter="pv1" toParameter="a1v1" />
+				</transition>
+				<transition id="t2" fromObject="A1" toObject="A2">
+					<connection fromParameter="a1v2" toParameter="a2v1" />
+				</transition>
+				<transition id="t3" fromObject="A1" toObject="A3">
+					<connection fromParameter="a1v2" toParameter="a3v1" />
+				</transition>
+				<transition id="t4" fromObject="A1" toObject="A4">
+					<connection fromParameter="a1v2" toParameter="a4v1" />
+				</transition>
+				<transition id="t5" fromObject="A2" toObject="A4">
+					<connection fromParameter="a2v2" toParameter="a4v2" />
+				</transition>
+				<transition id="t6" fromObject="A3" toObject="A4">
+					<connection fromParameter="a3v2" toParameter="a4v3" />
+				</transition>
+				<transition id="t7" fromObject="A4" toObject="SimpleProcess2">
+					<connection fromParameter="a4v4" toParameter="pv1" />
+				</transition>
+				<transition id="t8" fromObject="SimpleProcess2" toObject="SimpleProcess">
+					<connection fromParameter="pv2" toParameter="pv2" />
+				</transition>
+			</transitions>
+		</process>
+		<process id="SimpleProcess2" version="0.01" vendor="Olympum" created="2002/04/21">
+			<description>Simple Process to demonstrate WFDL</description>
+			<!-- these are the attributes for this process. see transitions to know
+			how to move the data between the process and the activities
+			-->
+			<attributes>
+				<attribute id="pv1" description="the base" />
+				<attribute id="pv2" description="the result" />
+			</attributes>
+			<activities>
+				<activity id="A1">
+					<description>Example static</description>
+					<parameters>
+						<parameter id="a1v1" description="int" />
+						<parameter id="a1v2" description="int" />
+					</parameters>
+					<implementation refId="DummyStatic">
+						<map activity="a1v1" resource="d1" />
+						<map resource="_return_" activity="a1v2" />
+					</implementation>
+				</activity>
+			</activities>
+			<transitions>
+				<transition id="t1" fromObject="SimpleProcess2" toObject="A1">
+					<connection fromParameter="pv1" toParameter="a1v1" />
+				</transition>
+				<transition id="t2" fromObject="A1" toObject="SimpleProcess2">
+					<connection fromParameter="a1v2" toParameter="pv2" />
+				</transition>
+			</transitions>
+		</process>
+</processes>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<nodes>
+<node id="A1">
+	<class>com.olympum.cibeles.engine.core.SimpleCalculator</class>
+	<constructor instance="a2v2">
+		<port id="a1v1" type="java.lang.Integer"/>
+	</constructor>
+</node>
+</nodes>
