@@ -1,3 +1,35 @@
+2003-09-21 19:22  Bruno Fernandez-Ruiz <brunofr@olympum.com>
+
+	* src/: Makefile.am, simetron.exe.config, Data/Container.cs,
+	  Data/INamed.cs, Data/IStore.cs, Data/Identified.cs,
+	  Data/IdentifiedObject.cs, Data/Project.cs, Data/Reference.cs,
+	  Data/StoreFactory.cs, Data/Workspace.cs, Data/XmlProjectStore.cs,
+	  Data/XmlStore.cs, Data/XmlWorkspaceStore.cs,
+	  Data/Geometry/Arc.cs, Data/Geometry/Point.cs,
+	  Data/NetworkTopology/IdentifiedElement.cs,
+	  Data/NetworkTopology/Lane.cs, Data/NetworkTopology/Link.cs,
+	  Data/NetworkTopology/Network.cs, Data/NetworkTopology/Node.cs,
+	  Data/NetworkTopology/Point.cs, Data/NetworkTopology/Segment.cs,
+	  Data/NetworkTopology/XmlNetworkStore.cs,
+	  Data/Providers/FileProvider.cs, Data/Providers/IProvider.cs,
+	  Data/Providers/ProviderFactory.cs,
+	  Data/Providers/ProviderSectionHandler.cs,
+	  Data/Providers/Mitsim/MitsimLexer.cs,
+	  Data/Providers/Mitsim/MitsimNetworkProvider.cs,
+	  Data/Providers/Mitsim/MitsimProvider.cs,
+	  Data/Providers/Mitsim/parser/.cvsignore,
+	  Data/Providers/Mitsim/parser/MitsimNetworkParser.jay,
+	  GUI/Commands/NewNetworkCommand.cs,
+	  GUI/Commands/NewProjectCommand.cs, GUI/Commands/QuitCommand.cs,
+	  GUI/Core/GSimetronMain.cs, GUI/Dialogs/NewProjectDialog.cs,
+	  GUI/Editors/NetworkEditor.cs, GUI/Workbench/Explorer.cs,
+	  GUI/Workbench/WorkbenchSingleton.cs, Logging/Logger.cs: Added new
+	  provider framework to allow multiple data providers.	Implemented
+	  provider for MITSIM network format.  Refactored NetworkTopology
+	  from scratch to be geometry based, and created new namespace
+	  Simetron.Data.Geometry to support it.	Removed temporarily all
+	  references to Data in the GUI to allow it to compile.
+
 2003-09-19 20:54  Bruno Fernandez-Ruiz <brunofr@olympum.com>
 
 	* .cvsignore, COPYING, INSTALL, Makefile, Makefile.am, autogen.sh,
