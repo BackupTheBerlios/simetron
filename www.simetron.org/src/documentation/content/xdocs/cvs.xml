@@ -13,7 +13,7 @@
     	<p><code>cvs -z3 -d:pserver:anonymous@cvs.simetron.berlios.de:/cvsroot/simetron co module</code></p>
     	<p>Whenever you would like to update your view:</p>
     	<p><code>cvs -z3 update -dP</code></p>
-    	<p>Alternatively, you can browse all the Simetron modules using the <fork href="http://cvs.berlios.de/cgi-bin/viewcvs.cgi/simetron/">Web-Based interface to our CVS repository</fork>.</p>
+    	<p>Alternatively, you can browse all the Simetron modules using the <fork href="ext:cvs">Web-Based interface to our CVS repository</fork>.</p>
     	</section>
   </body>
 </document>

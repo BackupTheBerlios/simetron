@@ -5,9 +5,12 @@
     <title>Contact Info</title> 
   </header> 
   <body> 
-    	<section>
-		<title>Maintainer</title>
-			<p>Bruno Fernandez-Ruiz (<link href="mailto:brunofr@olympum.com">brunofr@olympum.com</link>)</p>
-	</section>
+	<section>
+    <title>Lead Developers</title>
+    <ul>
+    	<li><link href="mailto:brunofr@olympum.com">Bruno Fernandez-Ruiz</link></li>
+    	<li><link href="mailto:toledo@mit.edu">Tomer Toledo</link></li>
+    </ul>
+		</section>  
   </body>
 </document>

@@ -7,7 +7,7 @@
   <body> 
     	<section>
 			<title>Lists</title>
-				<p>We have only one list for the time being, for the discussion of the development of simetron. Please use the <fork href="http://lists.berlios.de/mailman/listinfo/simetron-devel">developers mailing list</fork> for these purposes.</p>
+				<p>We have only one list for the time being, for the discussion of the development of simetron. Please use the <fork href="ext:simetron-list">developers mailing list</fork> for these purposes.</p>
     	</section>
   </body>
 </document>

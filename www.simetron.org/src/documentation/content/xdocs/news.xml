@@ -6,12 +6,12 @@
   </header> 
   <body> 
     	<section>
-				<title>Sat Sept 13, 2003</title>
-					<p>New web site layout, under the <code>forrest-site</code> CVS module! This site uses the XML Forrest project from xml.apache.org. It is much more comprehensive and faster than the old CMSimple.</p>
+				<title>2003/09/13</title>
+					<p>New web site layout using the XML Forrest project from xml.apache.org.</p>
 			</section>
     	<section>
-				<title>Thu Sept 11, 2003</title>
-					<p>Simetron is now hosted at <fork href="http://developer.berlios.de">berliOS</fork>. Thank you to the berliOS team for making this possible. The <code>workbench</code> and the <code>gtkgl-sharp</code> CVS modules are now in <link href="http://developer.berlios.de/cvs/?group_id=1018">berlioOS</link>.</p>
+				<title>2003/09/11</title>
+					<p>Simetron is now hosted at <fork href="ext:project">berliOS</fork>. Thank you to the berliOS team for making this possible. The <code>workbench</code> CVS module is now available in <link href="ext:cvs">berlioOS</link>.</p>
 			</section>
   </body>
 </document>

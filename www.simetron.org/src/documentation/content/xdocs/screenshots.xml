@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
+<document> 
+  <header> 
+    <title>Screenshots</title> 
+  </header> 
+  <body> 
+			<section>
+				<title>13 Oct 2003</title>
+					<p>One month later ... work on workbench is progressing slowly. Now it is possible to import networks into the GUI. In the screenshow you can see the current dummy network editor (a "test" label) after importing a network.</p>
+					<figure src="images/screenshots/workbench-20031013.png" alt="Simetron Workbench Screenshot"/>
+			</section>
+    <section>
+      <title>13 Sept 2003</title>
+      	<p>This is a screenshot of the workbench taken on 13 Sept 2003. It looks raw, because it is in fact raw!</p>
+      	<p>Our effort is mainly focused on data modeling and data import, and in implementing the plugin architecture ... but anyway, at least you can see that Gtk# looks good :)</p>
+	      <figure src="images/screenshots/workbench-20030913.png" alt="Simetron Workbench Screenshot"/>
+    </section>
+  </body>
+</document>

@@ -7,7 +7,7 @@
   <body> 
     <section>
       <title>Technical Features</title>
-<p>Simetron uses the .NET platform and runs on Microsoft Windows, Linux and MacOS using the mono runtime. The software is written in C# and the user interface is built using the Gtk# graphical toolkit. Simetron uses both the filesystem and the SQLite embedded database to store its data.</p>
+<p>Simetron uses the .NET platform and runs on Microsoft Windows, Linux and MacOS using the <fork href="ext:mono">Mono runtime</fork>. The software is written in C# and the user interface is built using the <fork href="ext:gtk-sharp">Gtk# widget toolkit</fork>.</p>
 
 <p>Once completed, Simetron will provide the following technical features:</p>
 

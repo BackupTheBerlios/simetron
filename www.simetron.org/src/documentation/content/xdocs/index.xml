@@ -7,9 +7,10 @@
 	<body> 
 	 	<section>
 			<title>Project</title>
-			<p>The Simetron Project is an open source project, sponsored by The Olympum Software Group, that aims at creating a modular traffic simulator for metropolitan networks.</p>
+			<p>The Simetron Project is an open source project, sponsored by <link href="ext:olympum">The Olympum Group</link>, that aims at creating a modular traffic simulator for metropolitan networks.</p>
 
-			<p>Simetron is designed as an open plugin architecture, written in C#, with multi-platform support via the <fork href="http://www.go-mono.com/">mono runtime</fork>. Simetron consists of the following modules:</p>
+			<p>Simetron is designed as an open plugin architecture, written in C#, with multi-platform support via the <fork href="ext:mono">Mono runtime</fork>.</p>
+			<p>Simetron consists of the following modules:</p>
 			<ul>
 				<li>Workbench - A graphical user interface for monitoring and controlling simulations, analyzing results, and editing networks. [Started]</li>
 				<li>Microkernel - The small footprint simulation engine based on a distributed workflow engine. [Started]</li>
@@ -19,23 +20,12 @@
 				<li>ATIS/ATMS Simulator.[Not Started]</li>
 			</ul>
 			
-			<p>The Simetron Project is hosted by <fork href="http://developer.berlios.de/projects/simetron">berliOS</fork>, a free service to Open Source developers offering easy access to the best in CVS, mailing lists, bug tracking, message boards/forums, task management, site hosting, permanent file archival, full backups, and total web-based administration.</p>
+			<p>The Simetron Project is hosted by <fork href="ext:project">berliOS</fork>, a free service to Open Source developers offering easy access to the best in CVS, mailing lists, bug tracking, message boards/forums, task management, site hosting, permanent file archival, full backups, and total web-based administration.</p>
 		</section>
-		<section>
-			<title>Subprojects</title>								
-			<p>During the development of Simetron we continously face technical problems, for which we create libraries with no dependencies with Simetron, the simulator. You can use these in your project.</p>
-			<ul> 
-	 			<li><link href="./subprojects/gtkgl-sharp.html">GtkGL#</link> - A C# library that integrates <fork href="http://www.opengl.org/">OpenGL</fork> with the <fork href="http://gtk-sharp.sf.net">Gtk# windowing toolkit.</fork></li>
-				<li>PVM.NET - C# bindings for <fork href="http://www.csm.ornl.gov/pvm/pvm_home.html">PVM</fork>.</li>
-				<li>JMS.NET - A JMS provider/bridge for .NET.</li>
-				<li>Cibeles - An embedded workflow engine.</li>
-			</ul>
-	</section>
 	<section>
 		<title>Licensing</title>
-			<p>Simetron and the simulator modules are released to the community under the terms of the <fork href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</fork>, to ensure that this software is free and remains free.</p>
-			<p>The hosted subprojects are released under a <fork href="http://www.opensource.org/licenses/bsd-license.php">BSD license</fork> in order to allow the biggest audience to benefit from them. You can use, modify, hack, copy, distribute these libraries	in your projects, both open source and proprietary.</p>
-			<p>If you would like to discuss the license terms, or are interested in obtaining a custom license agreement that suits your business needs, please write to <link href="mailto:licensing@simetron.org">licensing@simetron.org</link>.</p>
+			<p>Simetron and the simulator modules are released to the community under the terms of the <fork href="ext:gpl">GNU General Public License</fork>, to ensure that this software is free and remains free.</p>
+			<p>If you are interested in obtaining a custom license agreement that suits your needs, please <link href="mailto:licensing@simetron.org">write to us</link>.</p>
 	</section>
 	<section>
 		<title>Getting Involved</title>

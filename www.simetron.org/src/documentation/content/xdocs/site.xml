@@ -15,35 +15,25 @@ See http://xml.apache.org/forrest/linking.html for more info
 -->
 
 <site label="The Simetron Project" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="">
-
-<about label="About">
-	<index label="Welcome" href="index.html" description="Welcome to Simetron"/>
-	<news label="News" href="news.html" description="News about Simetron"/>
-	<lists label="Mailing lists" href="lists.html" description="Mailing lists"/>
-	<bugzilla label="Bug Database" href="bugzilla.html" description="Bug database"/>
-	<cvs label="CVS Repositories" href="cvs.html" description="Access to CVS"/>
-	<contact label="Contact us" href="contact.html" description="Contact info"/>	
-</about>
-
-<simetron label="Simetron" href="simetron/">
-	<index label="Motivation" href="index.html" description="Motivation of Traffic Simulation"/>
-	<overview label="Overview" href="overview.html" description="Project Overview"/>	
-	<features label="Features" href="features.html" description="Main Features"/>
-	<screenshots label="Screenshots" href="screenshots.html" description="Screenshots"/>
-	<downloads label="Downloads" href="downloads.html" description="Downloads"/>
-</simetron>			
-
-<subprojects label="Subprojects" href="subprojects/">
-	<overview label="Overview" href="index.html" description="Subprojects Overview"/>	
-	<gtkgl-sharp label="GtkGL#" href="gtkgl-sharp.html" description="GtkGL#"/>
-</subprojects>			
-
+	<simetron label="Simetron">
+		<index label="Welcome" href="index.html" description="Welcome to Simetron"/>
+		<overview label="Overview" href="overview.html" description="Project Overview"/>	
+		<features label="Features" href="features.html" description="Main Features"/>
+		<screenshots label="Screenshots" href="screenshots.html" description="Screenshots"/>
+		<downloads label="Downloads" href="downloads.html" description="Downloads"/>
+		<news label="News" href="news.html" description="News about Simetron"/>
+		<lists label="Mailing lists" href="lists.html" description="Mailing lists"/>
+		<bugzilla label="Bug Database" href="bugzilla.html" description="Bug database"/>
+		<cvs label="CVS" href="cvs.html" description="Access to CVS"/>
+		<contact label="Contact us" href="contact.html" description="Contact info"/>	
+	</simetron>
+	
   <all>
     <whole_site_html label="Whole Site HTML" href="site.html"/>
     <whole_site_html label="Whole Site PDF" href="site.pdf"/>
   </all>
-
-  <external-refs>
+  
+	  <external-refs>
     <xml.apache.org href="http://xml.apache.org/">
       <forrest href="forrest/">
         <validation href="validation.html"/>
@@ -52,6 +42,23 @@ See http://xml.apache.org/forrest/linking.html for more info
       </forrest>
       <cocoon href="cocoon/"/>
     </xml.apache.org>
-  </external-refs>
-
+		<simetron href="http://www.simetron.org/"/>
+		<olympum href="http://www.olympum.com/"/>
+		<project href="http://developer.berlios.de/projects/simetron"/>
+		<cvs href="http://cvs.berlios.de/cgi-bin/viewcvs.cgi/simetron/"/>
+		<bugs href="http://developer.berlios.de/bugs/?group_id=1018"/>
+		<patches href="http://developer.berlios.de/patch/?group_id=1018"/>
+		<simetron-list href="http://lists.berlios.de/mailman/listinfo/simetron-devel/"/>
+		<cibeles-list href="http://lists.berlios.de/mailman/listinfo/cibeles-devel/"/>
+		<gtkgl-sharp-list href="http://lists.berlios.de/mailman/listinfo/gtkgl-sharp-devel/"/>
+		<pvm-net-list href="http://lists.berlios.de/mailman/listinfo/pvm-net-devel/"/>
+		<download href="http://developer.berlios.de/project/showfiles.php?group_id=1018"/>
+		<bsd href="http://www.opensource.org/licenses/bsd-license.php"/>
+		<gpl href="http://www.gnu.org/license/gpl.html"/>
+		<jboss href="http://www.jboss.org/"/>
+		<mono href="http://www.go-mono.com/"/>
+ 		<pvm href="http://www.csm.ornl.gov/pvm/pvm_home.html"/>
+ 		<gtk-sharp href="http://gtk-sharp.sf.net"/>
+ 		<opengl href="http://www.opengl.org/"/>
+ </external-refs> 
 </site>

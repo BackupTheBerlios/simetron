@@ -7,8 +7,8 @@
   <body> 
     	<section>
 		<title>Releases</title>
-			<p>There is no current release for Simetron. If you would like to get the code, you will need to use the <link href="../cvs.html">CVS access</link>.</p>
-			<p>All project downloads are available at <link href="http://developer.berlios.de/project/showfiles.php?group_id=1018">berliOS project</link>.</p>
+			<p>There is no current release for Simetron. If you would like to get the code, you will need to use the <link href="site:cvs">CVS access</link>.</p>
+			<p>All project downloads are available at <link href="ext:project">berliOS project</link>.</p>
     	</section>
   </body>
 </document>

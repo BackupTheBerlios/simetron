@@ -7,9 +7,9 @@
   <body> 
     	<section>
 		<title>BerliOS</title>
-			<p>You can browse the current bugs for any of the modules in Simetron and the hosted subprojects in our berlios project: <fork href="http://developer.berlios.de/bugs/?group_id=1018">berliOS bug database</fork></p>
-			<p>Alternatively, if you would like to submit a patch against an existing bug, or if you just have created a patch to extend some functionality, please use the <fork href="http://developer.berlios.de/patch/?group_id=1018">berliOS patch submission interface</fork>.</p>
-			<p>We highly welcome code snippets. Please use the <fork href="http://lists.berlios.de/mailman/listinfo/simetron-devel">developers mailing list</fork> for these purposes.</p>
+			<p>You can browse the current bugs for any of the modules in Simetron and the hosted subprojects in our berlios project: <fork href="ext:bugs">berliOS bug database</fork></p>
+			<p>Alternatively, if you would like to submit a patch against an existing bug, or if you just have created a patch to extend some functionality, please use the <fork href="ext:patches">berliOS patch submission interface</fork>.</p>
+			<p>We highly welcome code snippets. Please use the <fork href="ext:simetron-list">developers mailing list</fork> for these purposes.</p>
     	</section>
   </body>
 </document>
