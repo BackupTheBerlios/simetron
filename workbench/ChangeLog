@@ -1,0 +1,29 @@
+2003-09-19 20:54  Bruno Fernandez-Ruiz <brunofr@olympum.com>
+
+	* .cvsignore, COPYING, INSTALL, Makefile, Makefile.am, autogen.sh,
+	  configure.in, src/.cvsignore, src/Makefile, src/Makefile.am,
+	  src/Data/Makefile, src/GUI/Makefile,
+	  src/GUI/Core/SplashWindow.cs,
+	  src/GUI/Workbench/WorkbenchSingleton.cs,
+	  src/GUI/Workbench/WorkbenchView.cs, src/Logging/Makefile: Update
+	  build system to automake and autoconf
+
+2003-09-15 08:34  Bruno Fernandez-Ruiz <brunofr@olympum.com>
+
+	* src/Logging/: Logger.cs, StackFrameTraceListener.cs: Added file
+	  support to Logger
+
+2003-09-15 08:14  Bruno Fernandez-Ruiz <brunofr@olympum.com>
+
+	* src/Logging/Logger.cs: Added temporary support for file logging -
+	  to be updated with TraceListener
+
+2003-09-14 15:58  Bruno Fernandez-Ruiz <brunofr@olympum.com>
+
+	* .cvsignore: Added bin to list of ignore dirs
+
+2003-09-11 20:57  Bruno Fernandez-Ruiz <brunofr@olympum.com>
+
+	* src/GUI/Core/SplashWindow.cs: Fixed null reference exception
+	  found occurred after the main loop started and the splash pixbuf
+	  was then set to null
