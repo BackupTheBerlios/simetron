@@ -3,7 +3,8 @@ simetron_DATA=Simetron.Logging.dll Simetron.Data.dll simetron.exe
 CLEANFILES=Simetron.Logging.dll Simetron.Data.dll simetron.exe
 CSC=mcs
 JAY=jay
-JAY_SKEL=/usr/share/jay/skeleton.cs
+JAY_DIR=`$(JAY) -p`
+JAY_SKEL=$(JAY_DIR)/skeleton.cs
 CSFLAGS=/debug /define:DEBUG /define:TRACE
 CLRVM=mono --debug
 
@@ -20,11 +21,13 @@ data_sources= \
 	$(srcdir)/Data/NetworkTopology/*.cs \
 	$(srcdir)/Data/Geometry/*.cs \
 	$(srcdir)/Data/Providers/*.cs \
+	$(srcdir)/Data/Providers/Xml/*.cs \
 	$(srcdir)/Data/Providers/Mitsim/*.cs \
 	$(MITSIM_NPARSER_CS)
-data_references =
-data_resources = \
-	/r:Simetron.Logging.dll 
+data_references = \
+	/r:Simetron.Logging.dll \
+	/r:System.Data.dll
+data_resources = 
 
 simetron_sources = \
 	$(srcdir)/GUI/Commands/*.cs \

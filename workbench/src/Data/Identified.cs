@@ -2,6 +2,6 @@ namespace Simetron.Data
 {
 	interface Identified
 	{
-		int ID  { get; }
+		int ID  { get; set; }
 	}
 }

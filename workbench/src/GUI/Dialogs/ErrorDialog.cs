@@ -1,5 +1,5 @@
 //
-//  GUIStackFrameTraceListener.cs - Console output to GUI
+//  ErrorDialog.cs  - Dialog for unexpected errors
 //
 //  Author:
 //    Bruno Fernandez-Ruiz (brunofr@olympum.com)
@@ -22,34 +22,35 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Simetron.GUI.Logging 
+namespace Simetron.GUI.Dialogs 
 {
 	using System;
-	using System.Diagnostics;
 	using Gtk;
+	using Glade;
 	using Simetron.GUI.Workbench;
 
-	public class GUIStackFrameTraceListener : TraceListener 
+	public class ErrorDialog 
 	{
-		public GUIStackFrameTraceListener () 
+		static Gtk.Dialog dialog;
+		static TextBuffer errorBuffer;
+
+		static ErrorDialog () 
 		{
+			XML gxml = new Glade.XML (null,
+						  WorkbenchSingleton.GLADEFILE,
+						  "ErrorDialog",
+						  null);
+			dialog = (Dialog) gxml["ErrorDialog"];
+			Gtk.TextView errorTextView = (TextView) gxml["errorTextView"];
+			errorBuffer = errorTextView.Buffer;
 		}
 
-		public override void Write (string message) 
+		public ErrorDialog (Exception e)
 		{
-			WorkbenchView currentView = 
-				WorkbenchSingleton.Instance.CurrentView;
+			errorBuffer.Text = e.ToString ();
+			dialog.Run ();
+			dialog.Hide ();
+		}
 
-			TextBuffer buffer = currentView.Console.Buffer; 
-			string now = DateTime.Now.ToLongTimeString();
-			string prefix = "[" + now + "] ";
-			string prefixedMessage = prefix + message;
-			buffer.Text += prefixedMessage;
-		}
-			
-		public override void WriteLine (string message) 
-		{
-			Write (message + '\n');
-		}
 	}
 }

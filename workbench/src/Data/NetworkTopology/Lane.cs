@@ -12,6 +12,7 @@ namespace Simetron.Data.NetworkTopology
 {
 	using System;
 	using System.Collections;
+	using System.Xml.Serialization;
 
 	public enum LaneRule {
 		CANNOT_CHANGE,
@@ -21,27 +22,25 @@ namespace Simetron.Data.NetworkTopology
 
 	public class Lane : Identified
 	{		
+		public const float WIDTH = 3.5f;
 		int id;
-		const float DEFAULT_WIDTH = 3.66;
-		float width;
+		float width = WIDTH;
 		LaneRule rule;
 		ArrayList upLanes;
+		int[] upLaneIDs;
 		ArrayList downLanes;
 		Segment parent;
 
-		public Lane (int id, LaneRule rule, Segment parent)
+		public Lane ()
 		{
-			this.id = id;
-			this.rule = rule;
-			this.parent = parent;
-			width = DEFAULT_WIDTH;
 			upLanes = new ArrayList ();
 			downLanes = new ArrayList ();
-			parent.AddLane (this);
 		}
 
+		[XmlAttribute]
 		public int ID {
 			get { return id; }
+			set { id = value; }
 		}
 
 		public float Width {
@@ -51,31 +50,38 @@ namespace Simetron.Data.NetworkTopology
 
 		public LaneRule Rule {
 			get { return rule; }
+			set { rule = value; }
 		}
 
-		public IEnumerable UpLanes {
-			get { return upLanes; }
+		public int[] UpLaneIDs {
+			get {
+				if (upLanes.Count > 0) {
+					int[] r = new int [upLanes.Count];
+					int i = 0;
+					foreach (Lane l in upLanes) {
+						r[i++] = l.ID;
+					}
+					return r;
+				} else {
+					return upLaneIDs;
+				}
+			}
+			set {
+				upLaneIDs = value;
+			}
 		}
 
-		public IEnumerable DownLanes {
-			get { return downLanes; }
-		}
-
+		[XmlIgnoreAttribute]
 		public Segment Parent {
 			get { return parent; }
+			set { parent = value; }
 		}
 
 		public void AddUpLane (Lane a)
 		{
 			if (a != null && !upLanes.Contains (a)) {
 				upLanes.Add (a);
-			}
-		}
-
-		public void AddDownLane (Lane a)
-		{
-			if (a != null && !downLanes.Contains (a)) {
-				downLanes.Add (a);
+				a.downLanes.Add (this);
 			}
 		}
 	}

@@ -1,4 +1,29 @@
-namespace Simetron.GUI.Workbench {
+//
+//  WorkbenchView.cs  - The workbench view part of the MVC
+//
+//  Author:
+//    Bruno Fernandez-Ruiz (brunofr@olympum.com)
+//
+//  Copyright (c) 2003 The Olympum Group,  http://www.olympum.com
+//  All Rights Reserved
+//
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+// 
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+// 
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+
+namespace Simetron.GUI.Workbench 
+{
 	using System;
 	using Gdk;
 	using Gtk;
@@ -7,60 +32,46 @@ namespace Simetron.GUI.Workbench {
 	using Simetron.GUI.Commands;
 	using Simetron.GUI.Core;
 
-	public class WorkbenchView {
+	public class WorkbenchView 
+	{
 		// load the icon from the default assembly
-		private readonly static Gdk.Pixbuf icon = new Pixbuf (null, 
-								      "simetron-hicolor-48x48.png");
+		readonly static Gdk.Pixbuf icon = new Pixbuf(null, 
+							     "simetron-hicolor-48x48.png");
 
-		private Gtk.Window window;
-		private ApplicationBar appbar;
-		private Perspective perspective;
+		Gtk.Window window;
+		Gtk.TextView console;
+		EditorNotebook editorNotebook;
 
-		public WorkbenchView (WorkbenchController controller) {
-			SplashWindow.Update ("Loading GUI definition");
+		public WorkbenchView (WorkbenchController controller) 
+		{
+			SplashWindow.Update ("Creating GUI");
 			XML gxml = new Glade.XML (null,
 						  WorkbenchSingleton.GLADEFILE,
 						  "Workbench",
 						  null);
 
-			// get the widgets from glade
 			window = (Gtk.Window) gxml["Workbench"];
-			Gtk.MenuBar menubar = (Gtk.MenuBar) gxml["menubar"];
-			Gtk.Toolbar toolbar = (Gtk.Toolbar) gxml["toolbar"];		       
-			Gtk.VBox vboxWindow = (Gtk.VBox) gxml["vboxWindow"];
+			Gtk.VPaned splitter = (Gtk.VPaned) gxml["mainPane"];
+			
+			editorNotebook = new EditorNotebook ();
+			splitter.Pack1 (editorNotebook, true, false);
 
-			SplashWindow.Update ("Creating widgets");
-			// create perspective containing explorer, properties list and editors
-			perspective = new Perspective ();
-			vboxWindow.PackStart (perspective);
-
-			// finally, add the application status bar
-			appbar = new ApplicationBar ();
-			vboxWindow.PackEnd (appbar, false, false, 0);
-
-			// TODO: these values should be extracted from persistent state data
-			// synchronize the views with the menus
-			bool showLeftNotebook = true;
-			bool showBottomNotebook = true;
-
-			Gtk.CheckMenuItem menuItem = (Gtk.CheckMenuItem) gxml["explorer_bar"];
-			menuItem.Active = showLeftNotebook;
-			perspective.LeftNotebookVisible = showLeftNotebook;
-
-			menuItem = (Gtk.CheckMenuItem) gxml["output_bar"];
-			menuItem.Active = showBottomNotebook;
-			perspective.BottomNotebookVisible = showBottomNotebook;
+			ScrolledWindow sw = new ScrolledWindow ();
+			console = new TextView ();
+			console.Editable = false;
+			console.WrapMode = WrapMode.Word;
+			sw.Add (console);
+			
+			Notebook bottomNotebook = new Notebook ();
+			bottomNotebook.AppendPage (sw, new Label ("Console"));
+			splitter.Pack2 (bottomNotebook, true, false);
 
                         window.Icon = icon;
-			this.WindowTitle = "";
-			
-			SplashWindow.Update ("Displaying widgets");
-
-			// show everything that we have created manually
-			// otherwise only glade widgets are shown
-			vboxWindow.ShowAll ();
+			this.WindowTitle = "";		
 			gxml.Autoconnect (controller);
-			SplashWindow.Update ("Workbench is now running!");
+			bottomNotebook.ShowAll ();
+			editorNotebook.ShowAll ();
+			SplashWindow.Update ("Simetron is ready!");
 		}
 
 		public string WindowTitle {
@@ -72,16 +83,20 @@ namespace Simetron.GUI.Workbench {
 			}
 		}
 
-		public Perspective Perspective {
-			get { return perspective; }
+ 		public Gtk.Window Window {
+ 			get { return window; }
+ 		}
+
+		public Gtk.TextView Console {
+			get {
+				return console;
+			}
 		}
 
-		public ApplicationBar ApplicationBar {
-			get { return appbar; }
-		}
-
-		public Gtk.Window Window {
-			get { return window; }
+		public EditorNotebook EditorNotebook {
+			get {
+				return editorNotebook;
+			}
 		}
 	}
 }

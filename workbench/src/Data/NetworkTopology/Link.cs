@@ -11,6 +11,7 @@
 namespace Simetron.Data.NetworkTopology 
 {
 	using System;
+	using System.Xml.Serialization;
 	using System.Collections;
 	using Simetron.Data;
 
@@ -20,29 +21,27 @@ namespace Simetron.Data.NetworkTopology
 		URBAN
 	}
 
-	public class Link : INamed
+	public class Link : INamed, Identified
 	{
 		int id;
 		string name;
 		Node upNode;
+		int upNodeID;
+		int downNodeID;
 		Node downNode;
 		LinkType type;
 		ArrayList segments;
+		int[] segmentIDs;
 
-		public Link (int id, LinkType type, 
-			     Node upNode, Node downNode,
-			     string name)
+		public Link ()
 		{
-			this.id = id;
-			this.type = type;
-			this.upNode = upNode;
-			this.downNode = downNode;
-			this.name = name;
 			segments = new ArrayList ();
 		}
 		
+		[XmlAttribute]
 		public int ID {
 			get { return id; }
+			set { id = value; }
 		}
 
 		public string Name {
@@ -52,24 +51,84 @@ namespace Simetron.Data.NetworkTopology
 
 		public LinkType Type {
 			get { return type; }
+			set { type = value; }
 		}
 
+		[XmlIgnoreAttribute]
 		public Node UpNode {
-			get { return upNode; }
+			get { 
+				return upNode; 
+			}
+			set {
+				upNode = value;
+				upNode.AddDownLink (this);
+			}
 		}
 
+		// enables Xml serialization
+		public int UpNodeID {
+			get { 
+				if (upNode != null) {
+					return upNode.ID;
+				} else {
+					return upNodeID;
+				}
+			}
+			set { 
+				upNodeID = value;
+			}	
+		}
+
+		[XmlIgnoreAttribute]
 		public Node DownNode {
-			get { return downNode; }
+			get { 
+				return downNode; 
+			}
+			set {
+				downNode = value;
+				downNode.AddUpLink (this);
+			}
 		}
 
-		public IEnumerable Segments {
-			get { return segments; }
+		// enables Xml serialization
+		public int DownNodeID {
+			get {
+ 				if (downNode != null) {
+					return downNode.ID;
+				} else {
+					return downNodeID; 
+				}
+			}
+			set { 
+				downNodeID = value; 
+			}
+		}
+
+
+		// enables Xml serialization
+		public int[] SegmentIDs {
+			get {
+				if (segments.Count > 0) {
+					int[] r = new int[segments.Count];
+					int index = 0;
+					foreach (Segment s in segments) {
+						r[index++] = s.ID;
+					}
+					return r;
+				} else {
+					return segmentIDs;
+				}
+			}
+			set {
+				segmentIDs = value;       
+			}
 		}
 
 		public void AddSegment (Segment segment)
 		{
 			if (segment != null && !segments.Contains (segment)) {
 				segments.Add (segment);
+				segment.Parent = this;
 			}
 		}
 	}

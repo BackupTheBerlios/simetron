@@ -1,5 +1,5 @@
 //
-// Point.cs  - A geometric point
+// Point.cs  - A geometric point of float precision
 //
 // Author:
 //   Bruno Fernandez-Ruiz (brunofr@olympum.com)
@@ -10,11 +10,21 @@
 
 namespace Simetron.Data.Geometry
 {
+	using System.Xml.Serialization;
+
+	// this class is similar to the struct System.Drawing.PointF
+	// structs are not optimized of being used in collections
+	// hence the reasoning for the class
 	public class Point
 	{
-		float x;
-		float y;
+		float x; // the x-coordinate
+		float y; // the y-coordinate
 		
+		public Point ()
+		{
+			// allows XmlSerialization
+		}
+
 		public Point (float x, float y)
 		{
 			this.x = x;
@@ -41,16 +51,18 @@ namespace Simetron.Data.Geometry
 			return ((point.X != other.X) || (point.Y != other.Y));
 		}
 			       				
+		[XmlAttribute]
 		public float X {
 			get { return x;	}
 			set { x = value; }
 		}
-		
+				
+		[XmlAttribute]
 		public float Y {
 			get { return y; }
 			set { y = value; }
 		}
-		
+
 		public override bool Equals (object other)
 		{
 			if (!(other is Point)) {

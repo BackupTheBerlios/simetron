@@ -1,7 +1,8 @@
-using System;
-
 namespace Simetron.GUI.Commands {
-	public interface ICommand {
+	using System;
+
+	public interface ICommand 
+	{
 		bool Run ();
 	}
 }

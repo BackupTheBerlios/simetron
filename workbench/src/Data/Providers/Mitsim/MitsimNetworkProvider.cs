@@ -23,11 +23,13 @@ namespace Simetron.Data.Providers.Mitsim
 
 		public override object Read () 
 		{
-			return null;
+			MitsimNetworkParser parser = new MitsimNetworkParser ();
+			return parser.parse (this.Stream);
 		}
 
 		public override void Write (object obj) 
 		{
+			throw new NotImplementedException ();
 		}
 	}
 }

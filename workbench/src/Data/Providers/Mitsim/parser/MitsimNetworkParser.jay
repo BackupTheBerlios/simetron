@@ -7,6 +7,7 @@ namespace Simetron.Data.Providers.Mitsim
 	using System.Text;
 	using Simetron.Data.NetworkTopology;
 	using Simetron.Data.Geometry;
+	using Simetron.Logging;
 	
 	public class MitsimNetworkParser {
 		MitsimLexer lexer;
@@ -59,7 +60,7 @@ namespace Simetron.Data.Providers.Mitsim
 	
 everything: heading body opt_EOF
 {
-	Console.WriteLine("Network parsing done");
+	Logger.Debug("Completed reading network");
 }
 ;
 
@@ -73,14 +74,15 @@ heading: description labels
 
 description: LSB TITLE RSB COL LITTERAL
 {
-	network = new Network ((string) $5);
+	network = new Network ();
+	network.Name = (string) $5;
 }
 ;
 
 labels: LSB LABELS RSB label_allocator LCB RCB
 | LSB LABELS RSB label_allocator LCB multi_labels RCB
 {
-	Console.WriteLine("Section labels done");
+	Logger.Debug("Section labels done");
 }
 ;
 
@@ -102,22 +104,25 @@ label: LCB INTEGER LITTERAL RCB
 }
 ;
 
-body: network sensors controls sdfns intersections
-| network sensors controls sdfns
-| network sensors controls intersections
-| network sensors sdfns intersections
-| network controls sdfns intersections
-| network sensors controls
-| network sensors sdfns
-| network sensors intersections
-| network controls sdfns
-| network controls intersections
-| network sdfns intersections
-| network sensors
-| network controls
-| network sdfns
-| network intersections
+body: network other
 | network
+;
+
+other: sensors controls sdfns intersections
+| sensors controls sdfns
+| sensors controls intersections
+| sensors sdfns intersections
+| controls sdfns intersections
+| sensors controls
+| sensors sdfns
+| sensors intersections
+| controls sdfns
+| controls intersections
+| sdfns intersections
+| sensors
+| controls
+| sdfns
+| intersections
 ;
 
 network: basic_network prohibitors
@@ -126,22 +131,30 @@ network: basic_network prohibitors
 
 basic_network: nodes links connectors
 {
-	Console.WriteLine("Done reading basic network");
+	Logger.Debug("Done reading basic network");
 }
 ;
 
-controls: signals toll_plazas bus_stops 
+controls: signals toll_plazas bus_stops
+| signals bus_stops toll_plazas
+| bus_stops signals toll_plazas
+| bus_stops toll_plazas signals 
+| toll_plazas bus_stops signals
+| toll_plazas signals bus_stops
+| signals bus_stops
+| signals toll_plazas 
+| bus_stops signals
+| bus_stops toll_plazas
+| toll_plazas signals
+| toll_plazas bus_stops
 | signals
 | toll_plazas
 | bus_stops
-| signals toll_plazas
-| toll_plazas bus_stops
-| signals bus_stops
 ;
 
 nodes: LSB NODES RSB node_allocator LCB multi_nodes RCB
 {
-	Console.WriteLine("Read all nodes");
+	Logger.Debug("Read all nodes");
 }
 ;
 
@@ -167,7 +180,7 @@ node: LCB INTEGER INTEGER LITTERAL RCB
 
 links: LSB LINKS RSB link_allocator LCB multi_links RCB
 {
-	Console.WriteLine("Read all links");
+	Logger.Debug("Read all links");
 	link = null;
 	segment = null;
 }
@@ -194,20 +207,25 @@ link_data: INTEGER INTEGER INTEGER INTEGER INTEGER
 	Node upNode = network.GetNode (upNID);
 	if (upNode == null) {
 		throw new FormatException ("Link " + id + 
-						  " has an invalid node " + upNID);
+					   " has an invalid node " + upNID);
 	}
 	int dnNID = (int) $4;
 	Node downNode = network.GetNode (dnNID);
 	if (downNode == null) {
 		throw new FormatException ("Link " + id + 
-						  " has an invalid node " + dnNID);
+					   " has an invalid node " + dnNID);
 	}
 	int labelID = (int) $5;
 	string name = (string) labels[labelID];
 	if (name == null) {
 		name = "Unnamed";
 	}
-	link = new Link (id, type, upNode, downNode, name);
+	link = new Link ();
+	link.ID = id;
+	link.Type = type;
+	link.UpNode = upNode;
+	link.DownNode = downNode;
+	link.Name = name;
 	network.AddLink (link);
 	segment = null;
 }
@@ -262,8 +280,8 @@ arc: FLOAT FLOAT FLOAT FLOAT FLOAT
 	// segments are listed from up node to down node
 
 	// ($1,$2)=StartPoint $3=Bulge ($4,$5)=EndPoint
-	float x1 = (float) $1;
-	float y1 = (float) $2;
+	float x0 = (float) $1;
+	float y0 = (float) $2;
 	float bulge = (float) $3;
 	float x2 = (float) $4;
 	float y2 = (float) $5;
@@ -280,21 +298,36 @@ arc: FLOAT FLOAT FLOAT FLOAT FLOAT
 	float grade = (o4 != null) ? (float) o4 : -1;
 	int indexPerfFunc = (o5 != null) ? (int) o5 : -1;
 
-	Point upPoint = new Point (x1, y1);
+	Point upPoint = new Point (x0, y0);
 	Point downPoint = new Point (x2, y2);
-	Point ctlPoint = new Point (0,0); // FIXME
+
+	// calculate the middle control point
+	float dx = (x2 - x0)/2;
+	float dy = (y2 - y0)/2;
+	float d = (float) Math.Sqrt ((double)(dx*dx + dy*dy));
+	float sin = dx / d;
+	float cos = dy / d;
+	float h = bulge * d;
+	float hx = h * cos;
+	float hy = h * sin;
+	float x1 = x0 + dx + hx; // TODO: verify sign (+/-)
+	float y1 = y0 + dy + hy; // TODO: verify sign (+/-)
+	
+	Point ctlPoint = new Point (x1,y1);
 
 	Segment previous = segment;
 
-	segment = new Segment (id, upPoint, downPoint, ctlPoint, link);
+	segment = new Segment ();
+	segment.ID = id;
+	segment.UpPoint = upPoint;
+	segment.DownPoint = downPoint;
+	segment.ControlPoint = ctlPoint;
 	segment.DefaultSpeedLimit = defaultSpeedLimit;
 	segment.FreeSpeed = freeSpeed;
 	segment.Grade = grade;
-
-	if (previous != null) {
-		previous.DownSegment = segment;
-		segment.UpSegment = previous;
-	}
+	network.AddSegment (segment);
+	link.AddSegment (segment);
+	segment.UpSegment = previous;
 
 	// TODO: performance function
 }
@@ -329,7 +362,11 @@ lane: LCB INTEGER INTEGER RCB
 		break;
 	}
 
-	Lane lane = new Lane (id, rule, segment);
+	Lane lane = new Lane ();
+	lane.ID = id;
+	lane.Rule = rule;
+	network.AddLane (lane);
+	segment.AddLane (lane);
 	if (lanes.Contains (id)) {
 		throw new FormatException ("Lane " + id + " not unique.");
 	}
@@ -340,7 +377,7 @@ lane: LCB INTEGER INTEGER RCB
 connectors: LSB CONNECTORS RSB num_objects LCB RCB
 | LSB CONNECTORS RSB num_objects LCB multi_connectors RCB
 {
-	//Console.WriteLine("Section connectors done");
+	Logger.Debug("Connected all lanes");
 }
 ;
 
@@ -365,14 +402,13 @@ connector: LCB INTEGER INTEGER RCB
 					   downLaneID + " does not exist.");
 	}
 
-	upLane.AddDownLane (downLane);
  	downLane.AddUpLane (upLane);
 }
 
 prohibitors: LSB PROHIBITORS RSB num_objects LCB RCB
 | LSB PROHIBITORS RSB num_objects LCB multi_prohibitors RCB
 {
-	//Console.WriteLine("Section prohibitors done");
+	Logger.Debug("Section prohibitors done");
 }
 ;
 
@@ -390,7 +426,7 @@ prohibitor: LCB INTEGER INTEGER RCB
 sensors: LSB SENSORS RSB sensor_allocator LCB RCB
 | LSB SENSORS RSB sensor_allocator LCB multi_sensor_stations RCB
 {
-	//Console.WriteLine("Section sensors done");
+	Logger.Debug("Section sensors done");
 }
 ;
 
@@ -409,7 +445,7 @@ sensor_station: LCB sensor_station_data sensor_data RCB
 
 sensor_station_data: INTEGER INTEGER FLOAT INTEGER FLOAT
 {
-	//Console.WriteLine("Section sensor station data done");
+	//Logger.Debug("Section sensor station data done");
 }
 ;
 
@@ -420,13 +456,13 @@ sensor_data: link_sensor
 
 link_sensor: LCB INTEGER FLOAT RCB
 {
-	//Console.WriteLine("Section link sensor done");
+	//Logger.Debug("Section link sensor done");
 }
 ;
 
 link_sensor_typed: LCB INTEGER FLOAT COL INTEGER RCB
 {
-	//Console.WriteLine("Section link sensor typed done");
+	//Logger.Debug("Section link sensor typed done");
 }
 ;
 
@@ -438,26 +474,26 @@ multi_lane_sensors: lane_sensor
 
 lane_sensor: LCB INTEGER FLOAT INTEGER RCB
 {
-	//Console.WriteLine("Section lane sensor done");
+	//Logger.Debug("Section lane sensor done");
 }
 ;
 
 lane_sensor_typed: LCB INTEGER FLOAT INTEGER COL INTEGER RCB
 {
-	//Console.WriteLine("Section sensor typed done");
+	//Logger.Debug("Section sensor typed done");
 }
 ;
 
 signals: LSB SIGNALS RSB signal_allocator LCB RCB
 | LSB SIGNALS RSB signal_allocator LCB multi_signal_stations RCB
 {
-	//Console.WriteLine("Section done");
+	Logger.Debug("Section signals done");
 }
 ;
 
 signal_allocator: num_objects
 {
-	//Console.WriteLine("Section signale allocator done");
+	//Logger.Debug("Section signal allocator done");
 }
 ;
 
@@ -470,7 +506,7 @@ signal_station: LCB signal_station_data signal_data RCB
 
 signal_station_data: INTEGER FLOAT INTEGER FLOAT
 {
-	//Console.WriteLine("Section signal station data  done");
+	//Logger.Debug("Section signal station data done");
 }
 ;
 
@@ -480,7 +516,7 @@ signal_data: link_signal
 
 link_signal: LCB INTEGER INTEGER RCB
 {
-	//Console.WriteLine("Section link signnal done");
+	//Logger.Debug("Section link signal done");
 }
 ;
 
@@ -490,14 +526,14 @@ multi_lane_signals: lane_signal
 
 lane_signal: LCB INTEGER INTEGER INTEGER RCB
 {
-	//Console.WriteLine("Section lane signal done");
+	//Logger.Debug("Section lane signal done");
 }
 ;
 
 toll_plazas: LSB TOLLS RSB num_objects LCB RCB
 | LSB TOLLS RSB num_objects LCB multi_toll_plazas RCB
 {
-	//Console.WriteLine("Section toll plazas done");
+	Logger.Debug("Section toll plazas done");
 }
 ;
 
@@ -510,7 +546,7 @@ toll_plaza: LCB toll_plaza_data multi_toll_booths RCB
 
 toll_plaza_data: FLOAT INTEGER FLOAT
 {
-	//Console.WriteLine("Section toll plaza data done");
+	//Logger.Debug("Section toll plaza data done");
 }
 ;
 
@@ -520,14 +556,14 @@ multi_toll_booths: toll_booth
 
 toll_booth: LCB INTEGER INTEGER INTEGER INTEGER INTEGER FLOAT RCB
 {
-	//Console.WriteLine("Section toll booth done");
+	//Logger.Debug("Section toll booth done");
 }
 ;
 
 bus_stops: LSB STOPS RSB num_objects LCB RCB
 | LSB STOPS RSB num_objects LCB multi_bus_stops RCB
 {
-	//Console.WriteLine("Section bus stops done");
+	Logger.Debug("Section bus stops done");
 }
 ;
 
@@ -540,7 +576,7 @@ bus_stop: LCB bus_stop_data multi_bus_stop_chars RCB
 
 bus_stop_data: FLOAT INTEGER FLOAT
 {
-	//Console.WriteLine("Section bus stop data done");
+	//Logger.Debug("Section bus stop data done");
 }
 ;
 
@@ -550,20 +586,20 @@ multi_bus_stop_chars: bus_stop_chars
 
 bus_stop_chars: LCB INTEGER INTEGER INTEGER INTEGER INTEGER FLOAT INTEGER RCB
 {
-	//Console.WriteLine("Section bus stop chars done");
+	Logger.Debug("Section bus stop chars done");
 }
 ;
 
 sdfns: LSB SDFNS RSB sdfn_allocator LCB RCB
 | LSB SDFNS RSB sdfn_allocator LCB multi_sdfns RCB
 {
-	//Console.WriteLine("Section sdfns done");
+	Logger.Debug("Section sdfns done");
 }
 ;
 
 sdfn_allocator: num_objects
 {
-	//Console.WriteLine("Section sdfn allocator done");
+	Logger.Debug("Section sdfn allocator done");
 }
 ;
 
@@ -578,14 +614,14 @@ sdfn: linear_sdfn
 
 non_linear_sdfn: LCB FLOAT FLOAT FLOAT FLOAT FLOAT RCB
 {
-	//Console.WriteLine("Section done");
+	Logger.Debug("Section nonlinear sdfn done");
 }
 ;
 
 
 linear_sdfn: LCB FLOAT FLOAT FLOAT FLOAT FLOAT FLOAT FLOAT RCB
 {
-	//Console.WriteLine("Section done");
+	Logger.Debug("Section linear sdfn done");
 }
 ;
 
@@ -601,14 +637,14 @@ intersect: ISNODE id LCB multi_manuvers RCB
 
 id: COL INTEGER 
 {
-	//Console.WriteLine("Section done");
+	Logger.Debug("Section id done");
 }
 ;
 
 
 IS_allocator: num_objects
 {
-	//Console.WriteLine("Section done");
+	Logger.Debug("Section is allocator done");
 }
 ;
 
@@ -626,7 +662,7 @@ manuver: LCB mymove LCB multi_conflict RCB LCB multi_fifo RCB characs RCB
 
 mymove: INTEGER HYP INTEGER
 { 
-	//Console.WriteLine("Section done");
+	Logger.Debug("Section done");
 }
 ;
 
@@ -636,7 +672,7 @@ multi_conflict: conflict
 
 conflict: INTEGER HYP INTEGER
 {
-	//Console.WriteLine("Section done");
+	Logger.Debug("Section conflics done");
 }
 ;
 
@@ -647,14 +683,14 @@ multi_fifo: fifo
 
 fifo: INTEGER HYP INTEGER
 {
-	//Console.WriteLine("Section done");
+	Logger.Debug("Section fifo done");
 }
 ;
 
 
 characs: FLOAT FLOAT
 {
-	//Console.WriteLine("Section done");
+	Logger.Debug("Section characs done");
 }
 ;
 
@@ -683,7 +719,7 @@ FLOAT: REAL { $$ = $1;}
 
 %%
 		
-public void parse (Stream s)
+public Network parse (Stream s)
 {
 	lexer = new MitsimLexer(s);
 
@@ -707,11 +743,14 @@ public void parse (Stream s)
 
 	yyparse (lexer);
 
+	// mark memory to ease gc
 	labels.Clear ();
 	labels = null;
 	lanes.Clear ();
 	lanes = null;
 	stack.Clear ();
 	stack = null;
+
+	return network;
 }
 }

@@ -12,6 +12,7 @@ namespace Simetron.Data.NetworkTopology
 {
 	using System;
 	using System.Collections;
+	using System.Xml.Serialization;
 	using Simetron.Data;
 
 	public enum NodeType {
@@ -22,7 +23,7 @@ namespace Simetron.Data.NetworkTopology
 		DESTINATION
 	}
 
-	public class Node : INamed
+	public class Node : INamed, Identified
 	{
 		int id;
 		string name;
@@ -30,17 +31,23 @@ namespace Simetron.Data.NetworkTopology
 		Hashtable upLinks;
 		Hashtable downLinks;
 
-		public Node (int id, NodeType type, string name)
+		public Node ()
 		{
-			this.id = id;
-			this.type = type;
-			this.name = name;
 			upLinks = new Hashtable ();
 			downLinks = new Hashtable ();
 		}
 
+		public Node (int id, NodeType type, string name) : this ()
+		{
+			this.id = id;
+			this.type = type;
+			this.name = name;
+		}
+
+		[XmlAttribute]
 		public int ID {
 			get { return id; }
+			set { id = value; }
 		}
 
 		public string Name {
@@ -50,6 +57,7 @@ namespace Simetron.Data.NetworkTopology
 
 		public NodeType Type {
 			get { return type; }
+			set { type = value; }
 		}
 
 		public void AddUpLink (Link link) 

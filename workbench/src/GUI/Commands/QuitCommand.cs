@@ -16,9 +16,7 @@ namespace Simetron.GUI.Commands {
 			store.Write (ws);
 			store.CloseConnection ();
 			*/
-			WorkbenchView view = WorkbenchSingleton.Instance.ActiveWorkbenchView;
-			WorkbenchSingleton.Instance.RemoveWorkbenchView (view);
-			view.Window.Destroy ();
+			WorkbenchSingleton.Instance.Quit ();
 			return true;
 		}
 	}

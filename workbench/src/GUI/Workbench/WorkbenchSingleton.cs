@@ -1,67 +1,102 @@
-namespace Simetron.GUI.Workbench {
+//
+//  WorkbenchSingleton.cs  - A workbench MVC factory
+//
+//  Author:
+//    Bruno Fernandez-Ruiz (brunofr@olympum.com)
+//
+//  Copyright (c) 2003 The Olympum Group,  http://www.olympum.com
+//  All Rights Reserved
+//
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+// 
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+// 
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+
+namespace Simetron.GUI.Workbench 
+{
 	using System;
 	using System.Collections;
 	using Gtk;
 	using Simetron.Logging;
 	using Simetron.GUI.Core;
 	using Simetron.Data;
-	using Simetron.Data.NetworkTopology;
 	using Simetron.Data.Providers;
 
-	public sealed class WorkbenchSingleton {
+	public sealed class WorkbenchSingleton 
+	{
+		public static readonly WorkbenchSingleton Instance = new WorkbenchSingleton ();
 		internal const string GLADEFILE = "workbench.glade";
 
-		private ArrayList views = new ArrayList ();
-		private WorkbenchView activeView;
-		private WorkbenchController controller;
-		//private Workspace model;
+		// many views
+		ArrayList views = new ArrayList ();
+		// only one view is currently active
+		WorkbenchView activeView;
+		// one (stateless) controller for all views
+		WorkbenchController controller;
+		// one model for all views
+		WorkbenchModel model;
 
-		private WorkbenchSingleton () {
-			ProviderFactory.GetProvider (typeof (Network));
-			// read metadata.xml using StoreFactory
-			/*
-			IStore store = StoreFactory.Instance.CreateStore (typeof (Workspace),
-									  StoreMode.XML);
-			store.OpenConnection (GSimetronMain.MetadataFile);
-			model = (Workspace) store.Read ();
-			store.CloseConnection ();
-			*/
-			controller = new WorkbenchController ();
+		// avoid public instantiation
+		private WorkbenchSingleton () 
+		{
+			model = new WorkbenchModel ();
+			controller = new WorkbenchController (model);
 		}
 
-		public static readonly WorkbenchSingleton Instance = new WorkbenchSingleton ();
 
-		public WorkbenchView ActiveWorkbenchView {
+		public WorkbenchView CurrentView {
 			get { return activeView; }
 		}
 
-		//public Workspace Workspace {
-		//	get { return model; }
-		//}
+		public WorkbenchModel Model {
+			get { return model; }
+		}
 
-		public WorkbenchView CreateWorkbenchView () {
+		public WorkbenchView CreateWorkbenchView () 
+		{
 			WorkbenchView view = new WorkbenchView (controller);
 			views.Add (view);
+			activeView = view;
 			Logger.Debug ("Created new top level view");
 			return view;
 		}
 
-		public void RemoveWorkbenchView (WorkbenchView view) {
+		public void RemoveWorkbenchView (WorkbenchView view) 
+		{
 			if (view == null) {
 				Logger.Debug ("Active window is null - cannot remove");
 				return;
 			}
-			views.Remove (view);
-			Logger.Debug ("Removed a top level view " + view.Window.Title);
-			if (views.Count == 0) {
-				Logger.Debug ("No views left - quitting");
-				Application.Quit ();
+			if (views.Count == 1) {
+				Quit ();
 			} else {
-				Logger.Debug ("There are " + views.Count + " views left");
+				views.Remove (view);
+				Logger.Debug ("Removed view " + view.Window.Title);
+				view.Window.Destroy ();
+				Logger.Debug (views.Count + " views left");
+
 			}
 		}
+		
+		public void Quit ()
+		{
+			// TODO: must save all documents before closing
+			Logger.Debug ("Bye!");
+			Application.Quit ();			
+		}
 
-		public void DeclareParentViewActive (object obj) {
+		public void DeclareParentViewActive (object obj) 
+		{
 			activeView = null;
 			Widget widget = obj as Widget;
 			Logger.Assert (widget != null, "object is not a widget");
@@ -79,7 +114,8 @@ namespace Simetron.GUI.Workbench {
 			Logger.Debug ("Did not find the active view");
 		}
 
-		private Gtk.Widget GetToplevelWidget (Gtk.Widget w) {	
+		private Gtk.Widget GetToplevelWidget (Gtk.Widget w) 
+		{	
 			Gtk.Widget widget = w;
 			Gtk.Widget parent = null;
 			for (;;) {
@@ -90,14 +126,6 @@ namespace Simetron.GUI.Workbench {
 					Gtk.Menu menu = widget as Gtk.Menu;
 					parent = menu.AttachWidget;
 				} else {
-					// TODO: Remove as it is fixed in Gtk-sharp
-					// calling Parent on a toplevel window throws an 
-					// exception
-					// This hack won't work if we use windows
-					// that are not toplevel
-					if (widget is Gtk.Window) {
-						break;
-					}
 					parent = widget.Parent;
 				}
 				if (parent == null) {

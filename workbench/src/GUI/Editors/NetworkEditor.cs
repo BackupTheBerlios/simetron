@@ -1,13 +1,22 @@
-using System;
-using Gtk;
-using Simetron.Data.NetworkTopology;
-
 namespace Simetron.GUI.Editors {	
-	public class NetworkEditor : Label {
-		Network network;
+	using System;
+	using Gtk;
+	using Simetron.GUI.Core;
+	using Simetron.Data.NetworkTopology;
 
-		public NetworkEditor (Network network) : base ("Test") {
-			this.network = network;
+	public class NetworkEditor : Label, IEditor {
+		Document document;
+		
+		public NetworkEditor () : base ("Test") {
 		}
+
+		public Document Model { 
+			get {
+				return document;
+			}
+			set {
+				document = value;
+			}
+		}		
 	}
 }

@@ -1,2 +1,5 @@
 Makefile.in
 Makefile
+Simetron.Data.dll
+Simetron.Logging.dll
+simetron.exe

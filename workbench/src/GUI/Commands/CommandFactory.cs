@@ -1,22 +1,27 @@
-using System;
-using System.Collections;
-using System.Reflection;
-using Simetron.Logging;
+namespace Simetron.GUI.Commands 
+{
+	using System;
+	using System.Collections;
+	using System.Reflection;
+	using Simetron.Logging;
 
-namespace Simetron.GUI.Commands {
-	public sealed class CommandFactory {
+	public sealed class CommandFactory 
+	{
 		private static Hashtable commands;
 		private static string ns;
 
-		static CommandFactory () {
+		static CommandFactory () 
+		{
 			commands = new Hashtable ();
 			ns = (typeof (CommandFactory)).Namespace;
 		}
 
-		private CommandFactory () {
+		private CommandFactory () 
+		{
 		}
 
-		public static ICommand CreateCommand (string commandName) {
+		public static ICommand CreateCommand (string commandName) 
+		{
 			if (commands.ContainsKey (commandName)) {
 				return (ICommand) commands[commandName];
 			} else {
